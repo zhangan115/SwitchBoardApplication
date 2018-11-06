@@ -1,7 +1,8 @@
-package com.board.applicion
+package com.board.applicion.view
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import com.board.applicion.R
 
 class MainActivity : AppCompatActivity() {
 
