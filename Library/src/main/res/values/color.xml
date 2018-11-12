@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="transparent">#00000000</color>
+
+    <color name="colorWhite">#ffffff</color>
+    <color name="color_division">#cccccc</color>
+    <color name="color_item_increment_normal_bg">@color/colorWhite</color>
+    <color name="color_item_increment_press_bg">@color/colorWhite</color>
+    <color name="color_fault_blue">#488de5</color>
+    <color name="color_shape_gray">#c4c4c4</color>
+    <color name="colorBlack">#000000</color>
+    <color name="color_verline_blue">#58CAF0</color>
+    <color name="item_increment_title_tv">#6983A5</color>
+    <color name="login_name_pass_device">#a4b1bc</color>
+</resources>

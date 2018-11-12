@@ -1,4 +1,4 @@
-package com.za.android.lab.base
+package com.board.applicion.base
 
 import android.graphics.drawable.Drawable
 import android.os.Build
@@ -21,13 +21,13 @@ abstract class BaseActivity : AppCompatActivity() {
         setContentView(getContentView())
         initToolBar()
         initData()
-        initView()
+        initView(savedInstanceState)
     }
 
     /**
      * 初始化view
      */
-    abstract fun initView()
+    abstract fun initView(savedInstanceState: Bundle?)
 
     /**
      * 初始化数据

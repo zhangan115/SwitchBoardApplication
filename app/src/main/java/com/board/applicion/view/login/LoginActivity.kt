@@ -1,6 +1,7 @@
 package com.board.applicion.view.login
 
 import android.content.Intent
+import android.os.Bundle
 import android.text.TextUtils
 import android.widget.Toast
 import com.board.applicion.R
@@ -8,12 +9,12 @@ import com.board.applicion.mode.DatabaseStore
 import com.board.applicion.mode.User
 import com.board.applicion.mode.User_
 import com.board.applicion.view.main.MainActivity
-import com.za.android.lab.base.BaseActivity
+import com.board.applicion.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : BaseActivity() {
 
-    override fun initView() {
+    override fun initView(savedInstanceState: Bundle?) {
         button.setOnClickListener { _ ->
             val nameStr = etName.text
             val passStr = etPass.text

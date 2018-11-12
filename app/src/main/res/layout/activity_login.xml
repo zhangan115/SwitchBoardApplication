@@ -9,23 +9,24 @@
         android:id="@+id/background"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:contentDescription="TODO"
+        android:scaleType="centerCrop"
+        android:src="@drawable/login_bg"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@color/color_fault_blue"
-        android:contentDescription="TODO" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/icon"
         android:layout_width="110dp"
         android:layout_height="82dp"
         android:layout_marginTop="52dp"
+        android:contentDescription="TODO"
+        android:src="@drawable/logo_1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars"
-        android:contentDescription="TODO" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textView2"
@@ -59,9 +60,12 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@null"
+            android:drawableLeft="@drawable/user_id"
+            android:drawablePadding="8dp"
             android:ems="10"
             android:hint="输入用户ID"
             android:inputType="textPersonName"
+            android:paddingLeft="8dp"
             android:singleLine="true"
             android:textSize="18sp" />
 
@@ -78,20 +82,23 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@null"
+            android:drawableLeft="@drawable/password"
+            android:drawablePadding="8dp"
             android:ems="10"
             android:hint="输入密码"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:paddingLeft="8dp" />
 
     </LinearLayout>
 
     <Button
         android:id="@+id/button"
-        style="@android:style/Widget.Material.Button.Colored"
         android:layout_width="0dp"
         android:layout_height="65dp"
         android:layout_marginStart="52dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="50dp"
+        android:background="@drawable/button_selector"
         android:text="登陆"
         android:textAlignment="center"
         android:textColor="@color/colorWhite"
