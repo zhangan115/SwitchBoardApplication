@@ -7,7 +7,9 @@ import android.support.annotation.Nullable
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.View
+import android.widget.TextView
 import com.board.applicion.R
+import com.library.widget.TextViewVertical
 
 
 abstract class BaseActivity : AppCompatActivity() {
@@ -51,12 +53,13 @@ abstract class BaseActivity : AppCompatActivity() {
         if (!showToolbar) {
             return
         }
-        toolBar.title = getToolBarTitle()
+        val titleTv = findViewById<TextView>(R.id.titleId)
+        titleTv.text = getToolBarTitle()
         setSupportActionBar(toolBar)
         val actionBar = supportActionBar
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true)
-            actionBar.setDisplayShowTitleEnabled(true)
+            actionBar.setDisplayShowTitleEnabled(false)
         }
         toolBar.setNavigationOnClickListener {
             onBackAction()

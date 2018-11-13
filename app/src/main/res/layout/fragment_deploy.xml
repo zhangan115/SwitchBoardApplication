@@ -43,6 +43,7 @@
                     android:weightSum="2">
 
                     <LinearLayout
+                        android:id="@+id/userManagerLayout"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -69,6 +70,7 @@
                         android:background="@color/color_division" />
 
                     <LinearLayout
+                        android:id="@+id/templateSetting"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
@@ -112,6 +114,7 @@
                 android:weightSum="2">
 
                 <LinearLayout
+                    android:id="@+id/substationManager"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -137,6 +140,7 @@
                     android:background="@color/color_division" />
 
                 <LinearLayout
+                    android:id="@+id/mainControlRoomManager"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -174,6 +178,7 @@
                 android:weightSum="2">
 
                 <LinearLayout
+                    android:id="@+id/cabinetManager"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -199,6 +204,7 @@
                     android:background="@color/color_division" />
 
                 <LinearLayout
+                    android:id="@+id/switchBoardManager"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"

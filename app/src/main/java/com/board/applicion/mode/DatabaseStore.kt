@@ -11,14 +11,13 @@ import io.objectbox.query.QueryBuilder
 import io.objectbox.reactive.DataSubscriptionList
 
 class DatabaseStore<T>(lifecycle: Lifecycle, entityClass: Class<T>) : LifecycleObserver {
-
     private var box: Box<T>? = null
     private val subscriptions: DataSubscriptionList = DataSubscriptionList()
 
     init {
         //初始化
         lifecycle.addObserver(this)
-        box = MyObjectBox.builder().androidContext(App.instance).buildDefault().boxFor(entityClass)
+        box = App.getBoxStore().boxFor(entityClass)
     }
 
     fun saveData(t: T): Boolean {
@@ -30,14 +29,16 @@ class DatabaseStore<T>(lifecycle: Lifecycle, entityClass: Class<T>) : LifecycleO
     }
 
     fun getQueryData(query: Query<T>, callBack: (List<T>) -> Unit) {
-        query.subscribe(subscriptions).on(AndroidScheduler.mainThread()).observer { callBack(it) }
+        query.subscribe(subscriptions).on(AndroidScheduler.mainThread()).observer {
+            callBack(it)
+        }
     }
 
     fun getQueryBuilder(): QueryBuilder<T> {
         return box!!.query()
     }
 
-    fun getBox() :Box<T>{
+    fun getBox(): Box<T> {
         return box!!
     }
 
