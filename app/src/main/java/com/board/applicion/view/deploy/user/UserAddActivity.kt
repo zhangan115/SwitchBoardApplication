@@ -33,15 +33,14 @@ class UserAddActivity : BaseActivity() {
                 return@setOnClickListener
             }
             val query = databaseStore.getQueryBuilder().equal(User_.name, id).build()
-            databaseStore.getQueryData(query) {
-                if (it.isNotEmpty()) {
-                    Toast.makeText(this, "该ID已经使用", Toast.LENGTH_SHORT).show()
-                    return@getQueryData
-                }
-                if (databaseStore.saveData(User(0, id, realName, pass, null, phone, "admin", System.currentTimeMillis(), 0))) {
-                    setResult(Activity.RESULT_OK)
-                    finish()
-                }
+            val userList = query.find()
+            if (userList.isNotEmpty()){
+                Toast.makeText(this, "该ID已经使用", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            if (databaseStore.saveData(User(0, id, realName, pass, null, phone
+                            , "admin", System.currentTimeMillis(), 0))) {
+                finish()
             }
         }
     }

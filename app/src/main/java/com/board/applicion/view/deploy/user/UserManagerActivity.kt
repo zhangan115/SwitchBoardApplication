@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -45,20 +46,13 @@ class UserManagerActivity : BaseActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if (item?.itemId == R.id.add) {
             //新增
-            startActivityForResult(Intent(this, UserAddActivity::class.java), 200)
+            startActivity(Intent(this, UserAddActivity::class.java))
         } else if (item?.itemId == R.id.edit) {
             //编辑
             isEdit = !isEdit
             recycleView.adapter?.notifyDataSetChanged()
         }
         return true
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 200 && resultCode == Activity.RESULT_OK) {
-            getUserList()
-        }
     }
 
     private fun getUserList() {
@@ -68,6 +62,7 @@ class UserManagerActivity : BaseActivity() {
         databaseStore!!.getQueryData(query) {
             userList.clear()
             userList.addAll(it)
+            Log.d("za","user is ${userList.size}")
             if (userList.isEmpty()) {
                 noData()
             } else {

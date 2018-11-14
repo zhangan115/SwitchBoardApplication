@@ -75,4 +75,5 @@ dependencies {
     implementation project(':Library')
 
     implementation 'com.aurelhubert:ahbottomnavigation:2.1.0'
+    implementation 'com.google.code.gson:gson:2.8.5'
 }
