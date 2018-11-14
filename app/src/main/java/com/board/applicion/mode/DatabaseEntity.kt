@@ -18,7 +18,7 @@ import io.objectbox.annotation.Transient
  *  STATUS	        INT	            状态
  */
 @Entity
-data class User(@Id var id: Long = 0
+ class User(@Id var id: Long = 0
                 , var name: String
                 , var realName: String
                 , var passWd: String
