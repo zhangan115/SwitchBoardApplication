@@ -1,6 +1,5 @@
 package com.board.applicion.view.deploy.user
 
-import android.app.Activity
 import android.os.Bundle
 import android.text.TextUtils
 import android.widget.Toast
@@ -15,7 +14,7 @@ class UserAddActivity : BaseActivity() {
 
     override fun initView(savedInstanceState: Bundle?) {
         saveUserButton.setOnClickListener { _ ->
-            val databaseStore = DatabaseStore<User>(lifecycle, User::class.java)
+            val databaseStore = DatabaseStore(lifecycle, User::class.java)
             val id = editTextUserId.text.toString()
             val realName = editTextUserName.text.toString()
             val pass = editTextUserPass.text.toString()

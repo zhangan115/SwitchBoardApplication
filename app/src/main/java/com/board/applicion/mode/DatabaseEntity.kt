@@ -2,6 +2,7 @@ package com.board.applicion.mode
 
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
+import io.objectbox.annotation.Transient
 
 /**
  * 用户表：USER
@@ -25,7 +26,10 @@ data class User(@Id var id: Long = 0
                 , var cellPhoneNum: String?
                 , var creator: String
                 , var updateTime: Long
-                , var status: Int)
+                , var status: Int) {
+    @Transient
+    var toDelete: Boolean = false
+}
 
 /**
  * 变电站表 SUBSTATION
