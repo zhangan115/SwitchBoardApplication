@@ -42,7 +42,7 @@ class UserManagerActivity : BaseEditActivity<User>() {
         return Intent(this, UserAddActivity::class.java)
     }
 
-    override fun toDeleteData(list: ArrayList<User>) {
+     override fun toDeleteData(list: ArrayList<User>) {
         val deleteList = ArrayList<User>()
         for (user in list) {
             //不能删除管理员和自己

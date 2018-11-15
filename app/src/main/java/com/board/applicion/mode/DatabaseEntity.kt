@@ -26,10 +26,7 @@ import io.objectbox.annotation.Transient
                 , var cellPhoneNum: String?
                 , var creator: String
                 , var updateTime: Long
-                , var status: Int) {
-    @Transient
-    var toDelete: Boolean = false
-}
+                , var status: Int)
 
 /**
  * 变电站表 SUBSTATION

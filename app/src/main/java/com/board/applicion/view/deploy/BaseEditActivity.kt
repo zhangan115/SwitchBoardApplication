@@ -19,11 +19,11 @@ import kotlinx.android.synthetic.main.toolbar_include.*
 
 abstract class BaseEditActivity<T> : BaseActivity() {
 
-    var isEditMode: Boolean = false
     private var chooseAllMode: Boolean = false
-    lateinit var databaseStore: DatabaseStore<T>
-    var editData = ArrayList<Boolean>()
-    val data = ArrayList<T>()
+    open var isEditMode: Boolean = false
+    open lateinit var databaseStore: DatabaseStore<T>
+    open var editData = ArrayList<Boolean>()
+    open val data = ArrayList<T>()
 
     fun getRecycleView(): ExpendRecycleView {
         return findViewById(R.id.recycleView)
@@ -125,24 +125,30 @@ abstract class BaseEditActivity<T> : BaseActivity() {
     /**
      * 删除选中的数据
      */
-    abstract fun toDeleteData(list: ArrayList<T>)
+    open fun toDeleteData(list: ArrayList<T>) {
+        databaseStore.getBox().remove(list)
+    }
 
     private fun chooseAllLayoutListener() {
         getChooseAllLayout().setOnClickListener {
             chooseAllMode = !chooseAllMode
-            if (data.isNotEmpty() && data.size == editData.size) {
-                for (position in 0 until data.size) {
-                    editData[position] = chooseAllMode
-                }
-            }
-            if (chooseAllMode) {
-                getChooseAllImage().setImageDrawable(findDrawable(R.drawable.radio_on))
-            } else {
-                getChooseAllImage().setImageDrawable(findDrawable(R.drawable.radio_off))
-            }
+            chooseAllChange()
             getRecycleView().adapter?.notifyDataSetChanged()
         }
 
+    }
+
+    private fun chooseAllChange() {
+        if (data.isNotEmpty() && data.size == editData.size) {
+            for (position in 0 until data.size) {
+                editData[position] = chooseAllMode
+            }
+        }
+        if (chooseAllMode) {
+            getChooseAllImage().setImageDrawable(findDrawable(R.drawable.radio_on))
+        } else {
+            getChooseAllImage().setImageDrawable(findDrawable(R.drawable.radio_off))
+        }
     }
 
     override fun onBackAction() {
@@ -165,6 +171,8 @@ abstract class BaseEditActivity<T> : BaseActivity() {
 
     private fun normalMode() {
         this.isEditMode = false
+        this.chooseAllMode = false
+        chooseAllChange()
         getAddView().visibility = View.VISIBLE
         getEditView().visibility = View.VISIBLE
         getFinishView().visibility = View.GONE
@@ -173,6 +181,9 @@ abstract class BaseEditActivity<T> : BaseActivity() {
         getRecycleView().adapter?.notifyDataSetChanged()
     }
 
+    /**
+     * 获取查询条件
+     */
     abstract fun getQueryBuild(): QueryBuilder<T>
 
     private fun getDataList() {
@@ -186,7 +197,7 @@ abstract class BaseEditActivity<T> : BaseActivity() {
             }
             editData.clear()
             for (i in 0 until data.size) {
-                editData.add(false)
+                editData.add(chooseAllMode)
             }
             getRecycleView().adapter?.notifyDataSetChanged()
         }
