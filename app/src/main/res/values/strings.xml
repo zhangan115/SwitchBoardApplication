@@ -4,4 +4,14 @@
     <string name="sure">确认</string>
     <string name="cancel">取消</string>
     <string name="search">搜索</string>
+    <string name="kv_6">6kV</string>
+    <string name="kv_10">10kV</string>
+    <string name="kv_35">35kV</string>
+    <string name="kv_110">110kV</string>
+    <string name="kv_220">220kV</string>
+    <string name="kv_330">330kV</string>
+    <string name="kv_380">380kV</string>
+    <string name="kv_500">500kV</string>
+    <string name="kv_750">750kV</string>
+    <string name="kv_1000">1000kV</string>
 </resources>

@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar_include" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/saveUserButton"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:background="@color/colorWhite"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="20dp">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="变电站名称"
+                    android:textColor="@color/colorText333"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/editTextName"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_weight="1"
+                    android:gravity="center|left"
+                    android:background="@null"
+                    android:hint="输入变电站名称"
+                    android:textColor="@color/colorText666"
+                    android:textColorHint="@color/colorText999"
+                    android:textSize="15sp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/color_division" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:id="@+id/chooseRank"
+                android:background="@color/colorWhite"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="20dp">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="电压等级"
+                    android:textColor="@color/colorText333"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/rankText"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_weight="1"
+                    android:gravity="center|left"
+                    android:background="@null"
+                    android:hint="点击选择电压等级"
+                    android:textColor="@color/colorText666"
+                    android:textColorHint="@color/colorText999"
+                    android:textSize="15sp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/color_division" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorWhite"
+                android:orientation="horizontal"
+                android:paddingLeft="20dp">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="20dp"
+                    android:text="描述"
+                    android:textColor="@color/colorText333"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/desEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:lines="8"
+                    android:background="@null"
+                    android:gravity="top"
+                    android:hint="输入描述"
+                    android:textColor="@color/colorText666"
+                    android:textColorHint="@color/colorText999"
+                    android:textSize="15sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/saveUserButton"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:layout_margin="15dp"
+            android:background="@drawable/button_selector"
+            android:gravity="center"
+            android:text="保存"
+            android:layout_alignParentBottom="true"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+
+    </RelativeLayout>
+
+
+</LinearLayout>

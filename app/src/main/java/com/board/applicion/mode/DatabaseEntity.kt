@@ -54,7 +54,7 @@ data class Substation(@Id var id: Long = 0
  *  ID	        INT	            主控室ID
  *  NAME	    VARCHAR(64)	    主控室名称
  *  SUB_ID	    INT	            变电站ID
- *  DESC	    VARCHAR(512)	变电站描述
+ *  DESC	    VARCHAR(512)	主控室描述
  *  CREATOR	    VARCHAR(64)	    创建人
  *  UPDATE_TIME	TIME	        创建/修改时间
  *  STATUS	    INT	            状态

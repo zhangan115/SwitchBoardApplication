@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="没有数据，点击增加添加!"
+            android:text="没有数据，点击添加!"
             android:textColor="@color/colorText666"
             android:textSize="16sp"
             android:visibility="gone" />

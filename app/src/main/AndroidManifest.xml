@@ -50,6 +50,7 @@
             android:screenOrientation="portrait"
             android:taskAffinity="${TASK_AFFINITY_VALUE}"
             android:windowSoftInputMode="adjustPan|stateHidden" />
+
         <activity
             android:name=".view.deploy.user.UserAddActivity"
             android:allowTaskReparenting="true"
@@ -58,6 +59,40 @@
             android:screenOrientation="portrait"
             android:taskAffinity="${TASK_AFFINITY_VALUE}"
             android:windowSoftInputMode="adjustPan|stateHidden" />
+
+        <activity
+            android:name=".view.deploy.substation.SubstationManagerActivity"
+            android:allowTaskReparenting="true"
+            android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:taskAffinity="${TASK_AFFINITY_VALUE}"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".view.deploy.substation.SubstationAddActivity"
+            android:allowTaskReparenting="true"
+            android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:taskAffinity="${TASK_AFFINITY_VALUE}"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".view.deploy.mainControlRoom.MainControlRoomManagerActivity"
+            android:allowTaskReparenting="true"
+            android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:taskAffinity="${TASK_AFFINITY_VALUE}"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".view.deploy.mainControlRoom.MainControlRoomAddActivity"
+            android:allowTaskReparenting="true"
+            android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:taskAffinity="${TASK_AFFINITY_VALUE}"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+
     </application>
 
 </manifest>

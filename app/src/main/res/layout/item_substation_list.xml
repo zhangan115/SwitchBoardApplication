@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/editStateImage"
@@ -37,16 +37,10 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/userLog"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_margin="20dp"
-                android:src="@drawable/user_img" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingLeft="15dp"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -58,12 +52,12 @@
                     <TextView
                         android:layout_width="80dp"
                         android:layout_height="wrap_content"
-                        android:text="用户ID"
+                        android:text="变电站"
                         android:textColor="@color/colorText999"
                         android:textSize="16sp" />
 
                     <TextView
-                        android:id="@+id/userID"
+                        android:id="@+id/substationName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/colorText333"
@@ -80,34 +74,12 @@
                     <TextView
                         android:layout_width="80dp"
                         android:layout_height="wrap_content"
-                        android:text="用户名称"
+                        android:text="电压等级"
                         android:textColor="@color/colorText999"
                         android:textSize="16sp" />
 
                     <TextView
-                        android:id="@+id/userName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/colorText333"
-                        android:textSize="16sp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="80dp"
-                        android:layout_height="wrap_content"
-                        android:text="密码"
-                        android:textColor="@color/colorText999"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:id="@+id/userPass"
+                        android:id="@+id/substationLevel"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/colorText333"
@@ -125,12 +97,12 @@
                     <TextView
                         android:layout_width="80dp"
                         android:layout_height="wrap_content"
-                        android:text="手机"
+                        android:text="描述"
                         android:textColor="@color/colorText999"
                         android:textSize="16sp" />
 
                     <TextView
-                        android:id="@+id/userPhone"
+                        android:id="@+id/substationDes"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/colorText333"

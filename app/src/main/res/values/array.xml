@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="rankList">
+        <item>@string/kv_6</item>
+        <item>@string/kv_10</item>
+        <item>@string/kv_35</item>
+        <item>@string/kv_110</item>
+        <item>@string/kv_220</item>
+        <item>@string/kv_380</item>
+        <item>@string/kv_500</item>
+        <item>@string/kv_750</item>
+        <item>@string/kv_1000</item>
+    </string-array>
+</resources>

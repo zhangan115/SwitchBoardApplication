@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import com.board.applicion.R
 import com.board.applicion.base.BaseFragment
+import com.board.applicion.view.deploy.substation.SubstationManagerActivity
 import com.board.applicion.view.deploy.user.UserManagerActivity
 import kotlinx.android.synthetic.main.fragment_deploy.*
 
@@ -29,6 +30,9 @@ class DeployFragment : BaseFragment() {
     override fun initView() {
         userManagerLayout.setOnClickListener {
             startActivity(Intent(activity, UserManagerActivity::class.java))
+        }
+        substationManager.setOnClickListener {
+            startActivity(Intent(activity,SubstationManagerActivity::class.java))
         }
     }
 }

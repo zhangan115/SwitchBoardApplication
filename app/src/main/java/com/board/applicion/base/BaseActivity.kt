@@ -21,9 +21,9 @@ abstract class BaseActivity : AppCompatActivity() {
         getSaveState(savedInstanceState)
         initThem()
         setContentView(getContentView())
-        initToolBar()
         initData()
         initView(savedInstanceState)
+        initToolBar()
     }
 
     /**
