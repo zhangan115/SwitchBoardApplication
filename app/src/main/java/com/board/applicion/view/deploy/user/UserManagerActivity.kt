@@ -27,7 +27,6 @@ class UserManagerActivity : BaseEditActivity<User>() {
 
     override fun setAdapter() {
         adapter = Adapter(data, editData, this)
-
         getRecycleView().adapter = adapter
     }
 
