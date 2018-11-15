@@ -13,7 +13,6 @@ import com.board.applicion.R
 import com.board.applicion.mode.MainControlRoom
 import com.board.applicion.mode.MainControlRoom_
 import com.board.applicion.view.deploy.BaseEditActivity
-import com.board.applicion.view.deploy.substation.SubstationAddActivity
 import io.objectbox.query.QueryBuilder
 
 class MainControlRoomManagerActivity : BaseEditActivity<MainControlRoom>() {
@@ -30,7 +29,7 @@ class MainControlRoomManagerActivity : BaseEditActivity<MainControlRoom>() {
     }
 
     override fun getDataClass(): Class<MainControlRoom> {
-        return  MainControlRoom::class.java
+        return MainControlRoom::class.java
     }
 
     override fun toSearchIntent(): Intent? {
@@ -38,13 +37,16 @@ class MainControlRoomManagerActivity : BaseEditActivity<MainControlRoom>() {
     }
 
     override fun getAddIntent(): Intent {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        return Intent(this, MainControlRoomAddActivity::class.java)
     }
 
     override fun getQueryBuild(): QueryBuilder<MainControlRoom> {
         return databaseStore.getBox().query().equal(MainControlRoom_.status, 0)
     }
 
+    override fun getToolBarTitle(): String? {
+        return "主控室管理"
+    }
 
     private class Adapter(private val dataList: ArrayList<MainControlRoom>, val editList: ArrayList<Boolean>, private val content: Context)
         : RecyclerView.Adapter<ViewHolder>() {
@@ -52,13 +54,13 @@ class MainControlRoomManagerActivity : BaseEditActivity<MainControlRoom>() {
         var isEdit: Boolean = false
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-            val view = LayoutInflater.from(content).inflate(R.layout.item_substation_list, parent, false)
+            val view = LayoutInflater.from(content).inflate(R.layout.item_main_control_room_list, parent, false)
             val editStateImage = view.findViewById<ImageView>(R.id.editStateImage)
-            val substationName = view.findViewById<TextView>(R.id.substationName)
-            val substationLevel = view.findViewById<TextView>(R.id.substationLevel)
-            val substationDes = view.findViewById<TextView>(R.id.substationDes)
+            val mainRoomName = view.findViewById<TextView>(R.id.substationName)
+            val substationName = view.findViewById<TextView>(R.id.substationLevel)
+            val des = view.findViewById<TextView>(R.id.substationDes)
             val editLayout = view.findViewById<LinearLayout>(R.id.editLayout)
-            return ViewHolder(view, editStateImage, substationName, substationLevel, substationDes, editLayout)
+            return ViewHolder(view, editStateImage, mainRoomName, substationName, des, editLayout)
         }
 
         override fun getItemCount(): Int {
@@ -71,8 +73,8 @@ class MainControlRoomManagerActivity : BaseEditActivity<MainControlRoom>() {
             } else {
                 holder.editLayout.visibility = View.GONE
             }
-            holder.text1.text = dataList[position].name
-//            holder.text2.text = dataList[position].voltageRank
+            holder.text1.text = dataList[position].substation?.name
+            holder.text2.text = dataList[position].name
             holder.text3.text = dataList[position].desc
             if (editList[position]) {
                 holder.imageView.setImageDrawable(content.resources.getDrawable(R.drawable.radio_on))
@@ -87,9 +89,9 @@ class MainControlRoomManagerActivity : BaseEditActivity<MainControlRoom>() {
                     } else {
                         holder.imageView.setImageDrawable(content.resources.getDrawable(R.drawable.radio_off))
                     }
-                }else{
-                    val intent = Intent(content, SubstationAddActivity::class.java)
-                    intent.putExtra("ID",dataList[position].id)
+                } else {
+                    val intent = Intent(content, MainControlRoomAddActivity::class.java)
+                    intent.putExtra("ID", dataList[position].id)
                     content.startActivity(intent)
                 }
             }

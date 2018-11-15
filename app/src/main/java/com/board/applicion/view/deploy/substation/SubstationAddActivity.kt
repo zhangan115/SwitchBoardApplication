@@ -56,21 +56,17 @@ class SubstationAddActivity : BaseAddActivity<Substation>() {
         if (TextUtils.isEmpty(rank)) {
             return false
         }
-        if (bean == null) {
+        if (bean ==null){
             val query = databaseStore.getQueryBuilder().equal(Substation_.name, name).build()
             val userList = query.find()
             if (userList.isNotEmpty()) {
                 Toast.makeText(this, "该名称已经使用", Toast.LENGTH_SHORT).show()
                 return false
             }
-            bean = Substation(beanID, name, rank.toString(), des
-                    , App.instance.getCurrentUser().realName
-                    , System.currentTimeMillis(), 0)
-        } else {
-            bean!!.name = name
-            bean!!.desc = des
-            bean!!.voltageRank = rank.toString()
         }
+        bean = Substation(beanID, name, rank.toString(), des
+                , App.instance.getCurrentUser().realName
+                , System.currentTimeMillis(), 0)
         return true
     }
 

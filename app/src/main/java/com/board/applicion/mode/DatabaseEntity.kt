@@ -3,6 +3,9 @@ package com.board.applicion.mode
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
 import io.objectbox.annotation.Transient
+import io.objectbox.relation.ToMany
+import io.objectbox.relation.ToOne
+import java.util.*
 
 /**
  * 用户表：USER
@@ -46,7 +49,9 @@ data class Substation(@Id var id: Long = 0
                       , var desc: String?
                       , var creator: String
                       , var updateTime: Long
-                      , var status: Int)
+                      , var status: Int){
+ var mainControlRooms : ToMany<MainControlRoom>? =null
+}
 
 /**
  * 主控室表 MAIN_CONTROL_ROOM
@@ -66,7 +71,10 @@ data class MainControlRoom(@Id var id: Long = 0
                            , var desc: String?
                            , var creator: String
                            , var updateTime: Long
-                           , var status: Int)
+                           , var status: Int){
+ @Transient
+ var substation:Substation? = null
+}
 
 /**
  * 屏柜表：CABINET

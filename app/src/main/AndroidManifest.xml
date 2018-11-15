@@ -5,6 +5,11 @@
     <!--外存储写权限，构建语法需要用到此权限 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+    <!-- Required to provide the web interface -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Required to run keep-alive service when targeting API 28 or higher -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+
     <application
         android:name=".app.App"
         android:allowBackup="true"
@@ -86,6 +91,15 @@
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".view.deploy.mainControlRoom.MainControlRoomAddActivity"
+            android:allowTaskReparenting="true"
+            android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:taskAffinity="${TASK_AFFINITY_VALUE}"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+
+        <activity
+            android:name=".view.deploy.substation.SubstationChooseActivity"
             android:allowTaskReparenting="true"
             android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask"

@@ -76,7 +76,7 @@
                     <TextView
                         android:layout_width="80dp"
                         android:layout_height="wrap_content"
-                        android:text="电压等级"
+                        android:text="主控室"
                         android:textColor="@color/colorText999"
                         android:textSize="16sp" />
 
@@ -84,7 +84,7 @@
                         android:id="@+id/substationLevel"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/colorText333"
+                        android:textColor="@color/colorBlue"
                         android:textSize="16sp" />
 
                 </LinearLayout>

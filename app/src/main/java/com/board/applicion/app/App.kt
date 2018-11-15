@@ -2,12 +2,17 @@ package com.board.applicion.app
 
 import android.app.Application
 import android.os.Environment
+import android.util.Log
+import com.board.applicion.BuildConfig
 import com.board.applicion.mode.MyObjectBox
 import com.board.applicion.mode.User
 import com.google.gson.Gson
 import com.library.utils.SPHelper
 import java.io.File
 import io.objectbox.BoxStore
+import io.objectbox.android.AndroidObjectBrowser
+
+
 
 
 class App : Application() {
