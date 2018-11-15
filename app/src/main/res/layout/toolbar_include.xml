@@ -53,6 +53,7 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:id="@+id/finishMode"
+                android:visibility="gone"
                 android:text="完成"
                 android:textColor="@android:color/white"
                 android:textSize="15sp" />

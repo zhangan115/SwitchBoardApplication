@@ -1,100 +1,196 @@
 package com.board.applicion.view.deploy
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.LinearLayoutManager
 import android.view.View
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import com.board.applicion.R
 import com.board.applicion.base.BaseActivity
 import com.board.applicion.mode.DatabaseStore
+import com.library.widget.ExpendRecycleView
 import io.objectbox.query.QueryBuilder
+import kotlinx.android.synthetic.main.activity_base_manager.*
+import kotlinx.android.synthetic.main.toolbar_include.*
 
 abstract class BaseEditActivity<T> : BaseActivity() {
 
-    var editMode :Boolean = false
-    var chooseAllMode : Boolean = false
-    lateinit var databaseStore:DatabaseStore<T>
+    var isEditMode: Boolean = false
+    private var chooseAllMode: Boolean = false
+    lateinit var databaseStore: DatabaseStore<T>
     var editData = ArrayList<Boolean>()
     val data = ArrayList<T>()
 
-    abstract fun getRecycleView():RecyclerView
+    fun getRecycleView(): ExpendRecycleView {
+        return findViewById(R.id.recycleView)
+    }
 
-    abstract fun getBottomModeLayout():RelativeLayout
+    private fun getBottomModeLayout(): RelativeLayout {
+        return deleteActionLayout
+    }
 
-    abstract fun getAddView():TextView
+    private fun getAddView(): TextView {
+        return addMode
+    }
 
-    abstract fun getEditView():TextView
+    private fun getEditView(): TextView {
+        return editMode
+    }
 
-    abstract fun getFinishView():TextView
+    private fun getFinishView(): TextView {
+        return finishMode
+    }
 
-    abstract fun getNoDataView():TextView
+    private fun getNoDataView(): TextView {
+        return noDataTv
+    }
 
-    abstract fun getChooseMoreLayout():LinearLayout
+    private fun getChooseAllLayout(): LinearLayout {
+        return chooseAllLayout
+    }
 
-    abstract fun getAddIntent():Intent
+    private fun getChooseAllImage(): ImageView {
+        return chooseAllImage
+    }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    private fun getDeleteView(): TextView {
+        return deleteTextView
+    }
+
+    override fun getContentView(): Int {
+        return R.layout.activity_base_manager
+    }
+
+    @SuppressLint("InflateParams")
+    override fun initView(savedInstanceState: Bundle?) {
+        modeLayout.visibility = View.VISIBLE
         getAddView().setOnClickListener {
             startActivity(getAddIntent())
         }
-        chooseMoreLayoutListener()
+        getNoDataView().setOnClickListener {
+            startActivity(getAddIntent())
+        }
+        getEditView().setOnClickListener {
+            editMode()
+        }
+        getFinishView().setOnClickListener {
+            normalMode()
+        }
+        chooseAllLayoutListener()
+        getDeleteView().setOnClickListener {
+            val deleteData = ArrayList<T>()
+            for (position in 0 until editData.size) {
+                if (editData[position]) {
+                    deleteData.add(data[position])
+                }
+            }
+            toDeleteData(deleteData)
+        }
+        val headerView = layoutInflater.inflate(R.layout.layout_search, null)
+        getRecycleView().layoutManager = LinearLayoutManager(this)
+        getRecycleView().addHeaderView(headerView)
+        headerView.setOnClickListener {
+            val intent = toSearchIntent()
+            if (intent != null) {
+                startActivity(intent)
+            }
+        }
+        setAdapter()
+        getDataList()
     }
 
-    fun chooseMoreLayoutListener(){
-        getChooseMoreLayout().setOnClickListener {
+    abstract fun setAdapter()
+
+    abstract fun modeChange()
+
+    override fun initData() {
+        databaseStore = DatabaseStore<T>(lifecycle, getDataClass())
+    }
+
+    abstract fun getDataClass(): Class<T>
+    /**
+     * 搜索界面
+     */
+    abstract fun toSearchIntent(): Intent?
+
+    /**
+     * 添加搜索界面
+     */
+    abstract fun getAddIntent(): Intent
+
+    /**
+     * 删除选中的数据
+     */
+    abstract fun toDeleteData(list: ArrayList<T>)
+
+    private fun chooseAllLayoutListener() {
+        getChooseAllLayout().setOnClickListener {
             chooseAllMode = !chooseAllMode
-            if (data.isNotEmpty()&&data.size == editData.size){
-                for (position in 0 until data.size){
+            if (data.isNotEmpty() && data.size == editData.size) {
+                for (position in 0 until data.size) {
                     editData[position] = chooseAllMode
                 }
             }
+            if (chooseAllMode) {
+                getChooseAllImage().setImageDrawable(findDrawable(R.drawable.radio_on))
+            } else {
+                getChooseAllImage().setImageDrawable(findDrawable(R.drawable.radio_off))
+            }
+            getRecycleView().adapter?.notifyDataSetChanged()
         }
+
     }
 
     override fun onBackAction() {
-        if (editMode){
+        if (isEditMode) {
             normalMode()
-        }else{
+        } else {
             super.onBackAction()
         }
     }
 
-    fun editMode(){
+    private fun editMode() {
+        this.isEditMode = true
         getAddView().visibility = View.GONE
         getEditView().visibility = View.GONE
         getFinishView().visibility = View.VISIBLE
-
+        modeChange()
         getBottomModeLayout().visibility = View.VISIBLE
+        getRecycleView().adapter?.notifyDataSetChanged()
     }
 
-    fun normalMode(){
+    private fun normalMode() {
+        this.isEditMode = false
         getAddView().visibility = View.VISIBLE
         getEditView().visibility = View.VISIBLE
         getFinishView().visibility = View.GONE
-
+        modeChange()
         getBottomModeLayout().visibility = View.GONE
-
+        getRecycleView().adapter?.notifyDataSetChanged()
     }
 
-    abstract fun getQueryBuild():QueryBuilder<T>
+    abstract fun getQueryBuild(): QueryBuilder<T>
 
-    fun getDataList(){
-      databaseStore.getQueryData(getQueryBuild().build()) {
-          data.clear()
-          data.addAll(it)
-          if (data.isEmpty()) {
-              getNoDataView().visibility = View.VISIBLE
-          } else {
-              getNoDataView().visibility = View.GONE
-          }
-          getRecycleView().adapter?.notifyDataSetChanged()
-      }
+    private fun getDataList() {
+        databaseStore.getQueryData(getQueryBuild().build()) {
+            data.clear()
+            data.addAll(it)
+            if (data.isEmpty()) {
+                getNoDataView().visibility = View.VISIBLE
+            } else {
+                getNoDataView().visibility = View.GONE
+            }
+            editData.clear()
+            for (i in 0 until data.size) {
+                editData.add(false)
+            }
+            getRecycleView().adapter?.notifyDataSetChanged()
+        }
     }
-
-
 
 
 }
