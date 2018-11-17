@@ -169,8 +169,15 @@
             android:screenOrientation="portrait"
             android:taskAffinity="${TASK_AFFINITY_VALUE}"
             android:windowSoftInputMode="adjustPan|stateHidden" />
-
-
+        <!--检查-->
+        <activity
+            android:name=".view.examination.room.CabinetListActivity"
+            android:allowTaskReparenting="true"
+            android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:taskAffinity="${TASK_AFFINITY_VALUE}"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
     </application>
 
 </manifest>
