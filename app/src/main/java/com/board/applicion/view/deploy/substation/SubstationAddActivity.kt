@@ -7,8 +7,8 @@ import android.widget.Toast
 import com.afollestad.materialdialogs.MaterialDialog
 import com.board.applicion.R
 import com.board.applicion.app.App
-import com.board.applicion.mode.Substation
-import com.board.applicion.mode.Substation_
+import com.board.applicion.mode.databases.Substation
+import com.board.applicion.mode.databases.Substation_
 import com.board.applicion.view.deploy.BaseAddActivity
 import io.objectbox.query.QueryBuilder
 import kotlinx.android.synthetic.main.activity_substation_add.*

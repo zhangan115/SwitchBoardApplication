@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.toolbar_include.*
 
 abstract class BaseEditActivity<T> : BaseActivity() {
 
-    private var chooseAllMode: Boolean = false
+    open var chooseAllMode: Boolean = false
     open var isEditMode: Boolean = false
     open lateinit var databaseStore: DatabaseStore<T>
     open var editData = ArrayList<Boolean>()
@@ -45,7 +45,7 @@ abstract class BaseEditActivity<T> : BaseActivity() {
         return finishMode
     }
 
-    private fun getNoDataView(): TextView {
+    open fun getNoDataView(): TextView {
         return noDataTv
     }
 
@@ -186,7 +186,7 @@ abstract class BaseEditActivity<T> : BaseActivity() {
      */
     abstract fun getQueryBuild(): QueryBuilder<T>
 
-    private fun getDataList() {
+    open fun getDataList() {
         databaseStore.getQueryData(getQueryBuild().build()) {
             data.clear()
             data.addAll(it)

@@ -4,11 +4,16 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import com.board.applicion.R
 import com.board.applicion.app.App
 import com.board.applicion.mode.*
+import com.board.applicion.mode.databases.MainControlRoom
+import com.board.applicion.mode.databases.MainControlRoom_
+import com.board.applicion.mode.databases.Substation
+import com.board.applicion.mode.databases.Substation_
 import com.board.applicion.view.deploy.BaseAddActivity
 import com.board.applicion.view.deploy.substation.SubstationChooseActivity
 import io.objectbox.query.QueryBuilder
@@ -17,7 +22,7 @@ import kotlinx.android.synthetic.main.activity_main_control_room_add.*
 class MainControlRoomAddActivity : BaseAddActivity<MainControlRoom>() {
 
     var substation: Substation? = null
-    lateinit var subStore: DatabaseStore<Substation>
+    private lateinit var subStore: DatabaseStore<Substation>
 
     override fun initData() {
         super.initData()
@@ -34,7 +39,7 @@ class MainControlRoomAddActivity : BaseAddActivity<MainControlRoom>() {
 
     override fun setDataToView() {
         if (bean != null) {
-            substation = subStore.getQueryBuilder().equal(Substation_.id, bean!!.SUB_ID).build().findUnique()
+            substation = bean!!.substationToOne.target
             editTextName.setText(bean!!.name)
             substationText.text = substation?.name
             desEditText.setText(bean!!.desc)
@@ -76,6 +81,9 @@ class MainControlRoomAddActivity : BaseAddActivity<MainControlRoom>() {
         }
         bean = MainControlRoom(beanID, roomName, substation!!.id, des
                 , App.instance.getCurrentUser().name, System.currentTimeMillis(), 0)
+        bean!!.substationToOne.target = substation
+        substation!!.mainControlRoomToMany.add(bean!!)
+        subStore.getBox().put(substation!!)
         return true
     }
 

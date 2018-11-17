@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar_include" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/saveUserButton"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:background="@color/colorWhite"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="20dp">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="变电站"
+                    android:textColor="@color/colorText333"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/subName"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_weight="1"
+                    android:drawableRight="@drawable/icon_arrow"
+                    android:drawablePadding="10dp"
+                    android:gravity="center|right"
+                    android:text="点击选择变电站"
+                    android:textColor="@color/colorText666"
+                    android:textColorHint="@color/colorText999"
+                    android:textSize="15sp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/color_division" />
+
+            <LinearLayout
+                android:id="@+id/chooseRoom"
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:background="@color/colorWhite"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="20dp">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="主控室"
+                    android:textColor="@color/colorText333"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/roomText"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_weight="1"
+                    android:drawableRight="@drawable/icon_arrow"
+                    android:drawablePadding="10dp"
+                    android:gravity="center|right"
+                    android:text="点击选择主控室"
+                    android:textColor="@color/colorText666"
+                    android:textColorHint="@color/colorText999"
+                    android:textSize="15sp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/color_division" />
+
+            <LinearLayout
+                android:id="@+id/cabinetLayout"
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:background="@color/colorWhite"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="20dp">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="屏柜"
+                    android:textColor="@color/colorText333"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/cabinetName"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_weight="1"
+                    android:drawableRight="@drawable/icon_arrow"
+                    android:drawablePadding="10dp"
+                    android:gravity="center|right"
+                    android:text="点击选择屏柜"
+                    android:textColor="@color/colorText666"
+                    android:textColorHint="@color/colorText999"
+                    android:textSize="15sp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/color_division" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:background="@color/colorWhite"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="20dp">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="规格"
+                    android:textColor="@color/colorText333"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/formatName"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_weight="1"
+                    android:drawableRight="@drawable/icon_arrow"
+                    android:drawablePadding="10dp"
+                    android:gravity="center|right"
+                    android:text="点击选择规格"
+                    android:textColor="@color/colorText666"
+                    android:textColorHint="@color/colorText999"
+                    android:textSize="15sp" />
+
+            </LinearLayout>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/color_division" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:background="@color/colorWhite"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="20dp">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="压板"
+                    android:textColor="@color/colorText333"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/editTextName"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:gravity="center|right"
+                    android:hint="输入压板名称"
+                    android:paddingRight="25dp"
+                    android:textColor="@color/colorText666"
+                    android:textColorHint="@color/colorText999"
+                    android:textSize="15sp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/color_division" />
+
+            <LinearLayout
+                android:id="@+id/positionLayout"
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:background="@color/colorWhite"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="20dp">
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="位置"
+                    android:textColor="@color/colorText333"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/positionName"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_weight="1"
+                    android:drawableRight="@drawable/icon_arrow"
+                    android:drawablePadding="10dp"
+                    android:gravity="center|right"
+                    android:text="点击选择位置"
+                    android:textColor="@color/colorText666"
+                    android:textColorHint="@color/colorText999"
+                    android:textSize="15sp" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@color/colorWhite"
+                android:orientation="vertical"
+                android:paddingLeft="20dp"
+                android:paddingTop="15dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="描述"
+                    android:textColor="@color/colorText333"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/desEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@null"
+                    android:gravity="top"
+                    android:hint="输入描述"
+                    android:lines="4"
+                    android:paddingTop="10dp"
+                    android:textColor="@color/colorText666"
+                    android:textColorHint="@color/colorText999"
+                    android:textSize="15sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/saveUserButton"
+            android:layout_width="match_parent"
+            android:layout_height="62dp"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="15dp"
+            android:background="@drawable/button_selector"
+            android:gravity="center"
+            android:text="保存"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
+
+    </RelativeLayout>
+
+
+</LinearLayout>

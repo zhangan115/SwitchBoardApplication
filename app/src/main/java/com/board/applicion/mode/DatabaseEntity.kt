@@ -2,10 +2,6 @@ package com.board.applicion.mode
 
 import io.objectbox.annotation.Entity
 import io.objectbox.annotation.Id
-import io.objectbox.annotation.Transient
-import io.objectbox.relation.ToMany
-import io.objectbox.relation.ToOne
-import java.util.*
 
 /**
  * 用户表：USER
@@ -32,103 +28,6 @@ import java.util.*
                 , var status: Int)
 
 /**
- * 变电站表 SUBSTATION
- * (version 1.0 data 2018-11-10)
- *  ID	                    INT	            变电站ID
- *  NAME	                VARCHAR(64)	    变电站名称
- *  VOLTAGE_RANK	        VARCHAR(32)	    电压等级
- *  DESC	                VARCHAR(512)	变电站描述
- *  CREATOR	                VARCHAR(64)	    创建人
- *  UPDATE_TIME         	TIME	        创建/修改时间
- *  STATUS	                INT	状态
- */
-@Entity
-data class Substation(@Id var id: Long = 0
-                      , var name: String
-                      , var voltageRank: String
-                      , var desc: String?
-                      , var creator: String
-                      , var updateTime: Long
-                      , var status: Int){
- var mainControlRooms : ToMany<MainControlRoom>? =null
-}
-
-/**
- * 主控室表 MAIN_CONTROL_ROOM
- * (version 1.0 data 2018-11-10)
- *  ID	        INT	            主控室ID
- *  NAME	    VARCHAR(64)	    主控室名称
- *  SUB_ID	    INT	            变电站ID
- *  DESC	    VARCHAR(512)	主控室描述
- *  CREATOR	    VARCHAR(64)	    创建人
- *  UPDATE_TIME	TIME	        创建/修改时间
- *  STATUS	    INT	            状态
- */
-@Entity
-data class MainControlRoom(@Id var id: Long = 0
-                           , var name: String
-                           , var SUB_ID: Long
-                           , var desc: String?
-                           , var creator: String
-                           , var updateTime: Long
-                           , var status: Int){
- @Transient
- var substation:Substation? = null
-}
-
-/**
- * 屏柜表：CABINET
- * (version 1.0 data 2018-11-10)
- *  ID	        INT	        屏柜ID
- *  NAME	    VARCHAR(64)	屏柜名称
- *  SUB_ID	    INT	        变电站ID
- *  MCR_ID	    INT	        主控室ID
- *  ROW_NUM	    INT	        行数
- *  COL_NUM	    INT	        列数
- *  CREATOR	    VARCHAR(64)	创建人
- *  UPDATE_TIME	TIME	    创建/修改时间
- *  STATUS	    INT	        状态
- */
-@Entity
-data class Cabinet(@Id var id: Long = 0
-                   , var name: String
-                   , var subId: Long
-                   , var mcrId: Long
-                   , var rowNum: Int
-                   , var colNum: Int
-                   , var creator: String
-                   , var updateTime: Long
-                   , var status: Int)
-
-/**
- * 压板表：SWITCH_BOARD
- * (version 1.0 data 2018-11-10)
- *  ID	        INT	            压板ID
- *  NAME	    VARCHAR(64)	    压板名称
- *  DESC	    VARCHAR(512)	压板描述
- *  SUB_ID	    INT	            变电站ID
- *  MCR_ID	    INT	            主控室ID
- *  CABINET_ID	INT	            屏柜ID
- *  ROW	        INT	            行号
- *  COL	        INT	            列号
- *  CREATOR	    VARCHAR(64)	    创建人
- *  UPDATE_TIME	TIME	        创建/修改时间
- *  STATUS	    INT	            状态
- */
-@Entity
-data class SwitchBoard(@Id var id: Long = 0
-                       , var name: String
-                       , var desc: String
-                       , var subId: Long
-                       , var mcrId: Long
-                       , var cabinetId: Long
-                       , var row: Int
-                       , var col: Int
-                       , var creator: String
-                       , var updateTime: Long
-                       , var status: Int)
-
-/**
  * 屏柜压板位置模板数据：CABINET_SB_POS_TEMPLATE
  * (version 1.0 data 2018-11-10)
  * ID	        INT	            模板ID
@@ -145,20 +44,20 @@ data class SwitchBoard(@Id var id: Long = 0
  * UPDATE_TIME	TIME	        创建/修改时间
  * STATUS	    INT	            状态
  */
-@Entity
-data class CabinetSbPosTemplate(@Id var id: Long = 0
-                                , var subId: Long
-                                , var mcrId: Long
-                                , var cabinetId: Long
-                                , var sbId: Long
-                                , var name: String
-                                , var desc: String
-                                , var row: Int
-                                , var col: Int
-                                , var position: Int
-                                , var creator: String
-                                , var updateTime: Long
-                                , var status: Int)
+//@Entity
+//data class CabinetSbPosTemplate(@Id var id: Long = 0
+//                                , var subId: Long
+//                                , var mcrId: Long
+//                                , var cabinetId: Long
+//                                , var sbId: Long
+//                                , var name: String
+//                                , var desc: String
+//                                , var row: Int
+//                                , var col: Int
+//                                , var position: Int
+//                                , var creator: String
+//                                , var updateTime: Long
+//                                , var status: Int)
 
 /**
  * 屏柜压板位置核查结果：CABINET_SB_POS_CK_RST

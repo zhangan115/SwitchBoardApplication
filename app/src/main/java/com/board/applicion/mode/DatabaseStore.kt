@@ -3,12 +3,14 @@ package com.board.applicion.mode
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.OnLifecycleEvent
+import android.util.Log
 import com.board.applicion.app.App
 import io.objectbox.Box
 import io.objectbox.android.AndroidScheduler
 import io.objectbox.query.Query
 import io.objectbox.query.QueryBuilder
 import io.objectbox.reactive.DataSubscriptionList
+import io.objectbox.reactive.SubscriptionBuilder
 
 class DatabaseStore<T>(lifecycle: Lifecycle, entityClass: Class<T>) : LifecycleObserver {
     private var box: Box<T>? = null
@@ -29,9 +31,15 @@ class DatabaseStore<T>(lifecycle: Lifecycle, entityClass: Class<T>) : LifecycleO
     }
 
     fun getQueryData(query: Query<T>, callBack: (List<T>) -> Unit) {
-        query.subscribe(subscriptions).on(AndroidScheduler.mainThread()).observer {
+        query.subscribe(subscriptions).on(AndroidScheduler.mainThread()).onError {
+            Log.d("za", it.message)
+        }.observer {
             callBack(it)
         }
+    }
+
+    fun getQueryData(query: Query<T>): SubscriptionBuilder<List<T>> {
+        return query.subscribe(subscriptions)
     }
 
     fun getQueryBuilder(): QueryBuilder<T> {

@@ -1,10 +1,8 @@
-package com.board.applicion.view.deploy.mainControlRoom
+package com.board.applicion.view.deploy.switchBoard
 
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,15 +10,12 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.board.applicion.R
-import com.board.applicion.app.App
-import com.board.applicion.mode.*
-import com.board.applicion.mode.databases.MainControlRoom
-import com.board.applicion.mode.databases.MainControlRoom_
-import com.board.applicion.mode.databases.Substation
+import com.board.applicion.mode.databases.CabinetSbPosTemplate
+import com.board.applicion.mode.databases.CabinetSbPosTemplate_
 import com.board.applicion.view.deploy.BaseEditActivity
 import io.objectbox.query.QueryBuilder
 
-class MainControlRoomManagerActivity : BaseEditActivity<MainControlRoom>() {
+class SwitchBoardManagerActivity : BaseEditActivity<CabinetSbPosTemplate>() {
 
     private lateinit var adapter: Adapter
 
@@ -33,8 +28,8 @@ class MainControlRoomManagerActivity : BaseEditActivity<MainControlRoom>() {
         adapter.isEdit = isEditMode
     }
 
-    override fun getDataClass(): Class<MainControlRoom> {
-        return MainControlRoom::class.java
+    override fun getDataClass(): Class<CabinetSbPosTemplate> {
+        return CabinetSbPosTemplate::class.java
     }
 
     override fun toSearchIntent(): Intent? {
@@ -42,30 +37,33 @@ class MainControlRoomManagerActivity : BaseEditActivity<MainControlRoom>() {
     }
 
     override fun getAddIntent(): Intent {
-        return Intent(this, MainControlRoomAddActivity::class.java)
+        return Intent(this, SwitchBoardAddActivity::class.java)
     }
 
-    override fun getQueryBuild(): QueryBuilder<MainControlRoom> {
-        return databaseStore.getBox().query().equal(MainControlRoom_.status, 0)
+    override fun getQueryBuild(): QueryBuilder<CabinetSbPosTemplate> {
+        return databaseStore.getQueryBuilder().equal(CabinetSbPosTemplate_.status,0)
     }
 
     override fun getToolBarTitle(): String? {
-        return "主控室管理"
+        return "压板管理"
     }
 
-    private class Adapter(private val dataList: ArrayList<MainControlRoom>, val editList: ArrayList<Boolean>, private val content: Context)
+    private class Adapter(private val dataList: ArrayList<CabinetSbPosTemplate>, val editList: ArrayList<Boolean>, private val content: Context)
         : RecyclerView.Adapter<ViewHolder>() {
 
         var isEdit: Boolean = false
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-            val view = LayoutInflater.from(content).inflate(R.layout.item_main_control_room_list, parent, false)
+            val view = LayoutInflater.from(content).inflate(R.layout.item_switch_board_list, parent, false)
             val editStateImage = view.findViewById<ImageView>(R.id.editStateImage)
-            val mainRoomName = view.findViewById<TextView>(R.id.substationName)
-            val substationName = view.findViewById<TextView>(R.id.substationLevel)
-            val des = view.findViewById<TextView>(R.id.substationDes)
+            val text1 = view.findViewById<TextView>(R.id.text1)
+            val text2 = view.findViewById<TextView>(R.id.text2)
+            val text3 = view.findViewById<TextView>(R.id.text3)
+            val text4 = view.findViewById<TextView>(R.id.text4)
+            val text5 = view.findViewById<TextView>(R.id.text5)
+            val text6 = view.findViewById<TextView>(R.id.text6)
             val editLayout = view.findViewById<LinearLayout>(R.id.editLayout)
-            return ViewHolder(view, editStateImage, mainRoomName, substationName, des, editLayout)
+            return ViewHolder(view, editStateImage, text1, text2, text3, text4,text5,text6,editLayout)
         }
 
         override fun getItemCount(): Int {
@@ -78,9 +76,13 @@ class MainControlRoomManagerActivity : BaseEditActivity<MainControlRoom>() {
             } else {
                 holder.editLayout.visibility = View.GONE
             }
-            holder.text1.text = dataList[position].substationToOne.target.name
-            holder.text2.text = dataList[position].name
-            holder.text3.text = dataList[position].desc
+            holder.text1.text = dataList[position].substationToOne?.target?.name
+            holder.text2.text = dataList[position].mainControlRoomToOne?.target?.name
+            holder.text3.text = dataList[position].cabinetToOne?.target?.name
+            val text = "${dataList[position].cabinetToOne?.target?.rowNum} X  ${dataList[position].cabinetToOne?.target?.colNum} "
+            holder.text4.text = text
+            holder.text5.text = dataList[position].name
+            holder.text6.text = dataList[position].desc
             if (editList[position]) {
                 holder.imageView.setImageDrawable(content.resources.getDrawable(R.drawable.radio_on))
             } else {
@@ -94,9 +96,9 @@ class MainControlRoomManagerActivity : BaseEditActivity<MainControlRoom>() {
                     } else {
                         holder.imageView.setImageDrawable(content.resources.getDrawable(R.drawable.radio_off))
                     }
-                } else {
-                    val intent = Intent(content, MainControlRoomAddActivity::class.java)
-                    intent.putExtra("ID", dataList[position].id)
+                }else{
+                    val intent = Intent(content, SwitchBoardAddActivity::class.java)
+                    intent.putExtra("ID",dataList[position].id)
                     content.startActivity(intent)
                 }
             }
@@ -106,6 +108,9 @@ class MainControlRoomManagerActivity : BaseEditActivity<MainControlRoom>() {
     private class ViewHolder(itemView: View, val imageView: ImageView
                              , val text1: TextView
                              , val text2: TextView
-                             , val text3: TextView, val editLayout: LinearLayout)
+                             , val text3: TextView
+                             , val text4: TextView
+                             , val text5: TextView
+                             , val text6: TextView, val editLayout: LinearLayout)
         : RecyclerView.ViewHolder(itemView)
 }

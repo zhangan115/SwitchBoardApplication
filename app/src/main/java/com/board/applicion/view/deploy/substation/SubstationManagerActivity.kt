@@ -10,8 +10,8 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.board.applicion.R
-import com.board.applicion.mode.Substation
-import com.board.applicion.mode.Substation_
+import com.board.applicion.mode.databases.Substation
+import com.board.applicion.mode.databases.Substation_
 import com.board.applicion.view.deploy.BaseEditActivity
 import io.objectbox.query.QueryBuilder
 
