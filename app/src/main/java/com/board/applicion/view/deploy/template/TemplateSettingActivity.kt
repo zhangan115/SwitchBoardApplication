@@ -142,8 +142,8 @@ class TemplateSettingActivity : BaseActivity() {
             if (it.isNotEmpty() && it.size == cabinet!!.rowNum * cabinet!!.colNum) {
                 //板子配置完整，可以进行模版设置
                 //通过行列进行排序
-                for (i in 0..rowValue) {
-                    for (j in 0..colValue) {
+                for (i in 1..rowValue) {
+                    for (j in 1..colValue) {
                         val sb = getCurrentData(i, j, it)
                         if (sb != null)
                             switchBoard.add(sb)

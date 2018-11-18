@@ -72,7 +72,10 @@ class CabinetListActivity : BaseActivity() {
             holder.name.text = dataList[position].name
             holder.itemView.setOnClickListener {
                 if (content is Activity) {
-                    content.startActivity(Intent())
+                    val intent = Intent(content,SwitchBoardActivity::class.java)
+                    intent.putExtra("title",dataList[position].name)
+                    intent.putExtra("id",dataList[position].id)
+                    content.startActivity(intent)
                 }
             }
         }

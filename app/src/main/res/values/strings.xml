@@ -14,4 +14,7 @@
     <string name="kv_500">500kV</string>
     <string name="kv_750">750kV</string>
     <string name="kv_1000">1000kV</string>
+
+    <string name="str_choose_camera">拍照</string>
+    <string name="str_choose_photo">相册</string>
 </resources>

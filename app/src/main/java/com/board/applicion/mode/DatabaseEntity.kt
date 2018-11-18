@@ -71,17 +71,17 @@ import io.objectbox.annotation.Id
  *  CHECKER	        VARCHAR(64)	    核查人
  *  STATUS	        INT	            状态
  */
-@Entity
-data class CabinetSbPosCkRst(@Id var id: Long = 0
-                             , var subId: Long
-                             , var mcrId: Long
-                             , var cabinetId: Long
-                             , var checkTime: Long
-                             , var posImage: String
-                             , var checkValue: String
-                             , var checker: String
-                             , var updateTime: Long
-                             , var status: Int)
+//@Entity
+//data class CabinetSbPosCkRst(@Id var id: Long = 0
+//                             , var subId: Long
+//                             , var mcrId: Long
+//                             , var cabinetId: Long
+//                             , var checkTime: Long
+//                             , var posImage: String
+//                             , var checkValue: String
+//                             , var checker: String
+//                             , var updateTime: Long
+//                             , var status: Int)
 
 /**
  * 屏柜压板位置核查详细结果：SB_POS_CK_RST_DETAIL
@@ -99,21 +99,21 @@ data class CabinetSbPosCkRst(@Id var id: Long = 0
  *  CHECKER	    VARCHAR(64)	    核查人
  *  STATUS	    INT	            状态
  */
-@Entity
-data class SbPosCjRstDetail(@Id var id: Long = 0
-                            , var subId: Long
-                            , var mcrId: Long
-                            , var cabinetId: Long
-                            , var sbId: Long
-                            , var checkTime: Long
-                            , var name: String
-                            , var desc: String
-                            , var row: Int
-                            , var col: Int
-                            , var posMatch: Int
-                            , var checker: String
-                            , var updateTime: Long
-                            , var status: Int)
+//@Entity
+//data class SbPosCjRstDetail(@Id var id: Long = 0
+//                            , var subId: Long
+//                            , var mcrId: Long
+//                            , var cabinetId: Long
+//                            , var sbId: Long
+//                            , var checkTime: Long
+//                            , var name: String
+//                            , var desc: String
+//                            , var row: Int
+//                            , var col: Int
+//                            , var posMatch: Int
+//                            , var checker: String
+//                            , var updateTime: Long
+//                            , var status: Int)
 
 
 

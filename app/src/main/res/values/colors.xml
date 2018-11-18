@@ -12,4 +12,5 @@
     <color name="colorDisable">#cccccc</color>
     <color name="colorChecking">#cccccc</color>
     <color name="colorSure">#cccccc</color>
+    <color name="colorCheck">#fc8d47</color>
 </resources>
