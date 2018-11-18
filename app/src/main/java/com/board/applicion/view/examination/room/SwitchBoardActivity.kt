@@ -148,14 +148,15 @@ class SwitchBoardActivity : BaseActivity() {
                                 if (sb != null) {
                                     sbCheckData.add(SbPosCjRstDetail(0, sb.subId, sb.mcrId, sb.cabinetId
                                             , sb.id, System.currentTimeMillis(), sb.name, sb.desc, sb.row, sb.col
-                                            , 0, App.instance.getCurrentUser().name
+                                            , 1, App.instance.getCurrentUser().name
                                             , System.currentTimeMillis(), 0))
                                 }
                             }
                         }
                         runOnUiThread {
-                            if (sbCheckData.isNotEmpty()){
+                            if (sbCheckData.isNotEmpty()) {
                                 showPhoto.visibility = View.GONE
+                                showResultLayout.visibility = View.VISIBLE
                                 sbRecycleView.adapter?.notifyDataSetChanged()
                             }
                         }
@@ -236,7 +237,6 @@ class SwitchBoardActivity : BaseActivity() {
             val uri = Crop.getOutput(result)
             Glide.with(this).load(uri).into(showPhoto)
             photoFile = File(uri.encodedPath)
-            Log.d("za", "photo place is ===>${photoFile!!.absolutePath}")
             showPhoto.visibility = View.VISIBLE
             takePhoto.visibility = View.GONE
             updateState()
@@ -309,10 +309,10 @@ class SwitchBoardActivity : BaseActivity() {
         }
 
         override fun onBindViewHolder(holder: CheckViewHolder, position: Int) {
-            if (dataList[position].posMatch == 0) {
-                holder.imageView.setImageDrawable(content.resources.getDrawable(R.drawable.press_plate_b_on))
-            } else {
-                holder.imageView.setImageDrawable(content.resources.getDrawable(R.drawable.press_plate_b_off))
+            when (dataList[position].posMatch) {
+                0 -> holder.imageView.setImageDrawable(content.resources.getDrawable(R.drawable.press_plate__off_success))
+                1 -> holder.imageView.setImageDrawable(content.resources.getDrawable(R.drawable.press_plate__on_fail))
+                else -> holder.imageView.setImageDrawable(content.resources.getDrawable(R.drawable.press_plate_b_off))
             }
         }
     }

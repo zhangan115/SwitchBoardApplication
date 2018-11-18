@@ -175,12 +175,64 @@
                 android:background="@color/colorWhite"
                 android:gravity="center">
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/sbRecycleView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:scrollbars="none" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1">
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/sbRecycleView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:scrollbars="none" />
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:id="@+id/showResultLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:drawableLeft="@drawable/green_circle"
+                            android:drawablePadding="5dp"
+                            android:text="一致"
+                            android:textColor="@color/colorText333"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="30dp"
+                            android:layout_marginRight="30dp"
+                            android:drawableLeft="@drawable/red_circle"
+                            android:drawablePadding="5dp"
+                            android:text="不一致"
+                            android:textColor="@color/colorText333"
+                            android:textSize="16sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:drawableLeft="@drawable/gray_circle"
+                            android:drawablePadding="5dp"
+                            android:text="无法识别"
+                            android:textColor="@color/colorText333"
+                            android:textSize="15sp" />
+                    </LinearLayout>
+                </LinearLayout>
 
                 <ImageView
                     android:id="@+id/showPhoto"
@@ -211,11 +263,11 @@
 
         <LinearLayout
             android:id="@+id/tempLayout"
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#66000000"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -394,7 +446,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/blue_circl"
+                    android:drawableLeft="@drawable/blue_circle"
                     android:drawablePadding="6dp"
                     android:text="打开"
                     android:textSize="14sp" />
@@ -403,7 +455,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:drawableLeft="@drawable/black_circl"
+                    android:drawableLeft="@drawable/black_circle"
                     android:drawablePadding="6dp"
                     android:text="关闭"
                     android:textSize="14sp" />
