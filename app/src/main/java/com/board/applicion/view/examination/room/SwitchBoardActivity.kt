@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -41,6 +42,7 @@ class SwitchBoardActivity : BaseActivity() {
     private lateinit var cabinetSbPosCkRst: CabinetSbPosCkRst
     private val sbCheckData = ArrayList<SbPosCjRstDetail>()
     private var photoFile: File? = null
+    private var photoPath: String? = null
     private var isCheck = false
     private var isChecking = false
 
@@ -66,11 +68,11 @@ class SwitchBoardActivity : BaseActivity() {
                 checkPhoto()
                 return@setOnClickListener
             }
-            if (photoFile != null && isCheck) {
+            if (!TextUtils.isEmpty(photoPath) && isCheck) {
                 //to save
                 if (cabinet != null) {
                     cabinetSbPosCkRst = CabinetSbPosCkRst(0, cabinet!!.subId, cabinet!!.mcrId, cabinet!!.id
-                            , System.currentTimeMillis(), photoFile!!.absolutePath, "", App.instance.getCurrentUser().name
+                            , System.currentTimeMillis(), photoPath, "", App.instance.getCurrentUser().name
                             , System.currentTimeMillis(), 0)
                     for (sb in sbCheckData) {
                         sb.cabinetSbPosCkRstToOne.target = cabinetSbPosCkRst
@@ -86,16 +88,16 @@ class SwitchBoardActivity : BaseActivity() {
         }
         showTempData.setOnClickListener { _ ->
             if (isCheck) {
-                if (photoFile == null || !isChecking) {
+                if (TextUtils.isEmpty(photoPath) || isChecking) {
                     return@setOnClickListener
                 }
                 //to handle 人工核查
-                if (cabinet==null)return@setOnClickListener
-                val intent = Intent(this,CheckByHandActivity::class.java)
-                intent.putExtra("photo",photoFile?.absolutePath)
-                intent.putExtra("cabinetId",cabinet!!.id)
-                SPHelper.write(this,"data","check_data",Gson().toJson(sbCheckData))
-                startActivityForResult(intent,200)
+                if (cabinet == null) return@setOnClickListener
+                val intent = Intent(this, CheckByHandActivity::class.java)
+                intent.putExtra("photo", photoPath)
+                intent.putExtra("cabinetId", cabinet!!.id)
+
+                startActivityForResult(intent, 200)
             } else {
                 //show temp 展示模版
                 tempLayout.visibility = View.VISIBLE
@@ -155,7 +157,7 @@ class SwitchBoardActivity : BaseActivity() {
                                 if (sb != null) {
                                     sbCheckData.add(SbPosCjRstDetail(0, sb.subId, sb.mcrId, sb.cabinetId
                                             , sb.id, System.currentTimeMillis(), sb.name, sb.desc, sb.row, sb.col
-                                            , 1, App.instance.getCurrentUser().name
+                                            , 2, App.instance.getCurrentUser().name
                                             , System.currentTimeMillis(), 0))
                                 }
                             }
@@ -243,7 +245,9 @@ class SwitchBoardActivity : BaseActivity() {
         if (resultCode == RESULT_OK) {
             val uri = Crop.getOutput(result)
             Glide.with(this).load(uri).into(showPhoto)
-            photoFile = File(uri.encodedPath)
+            photoPath = uri.path
+            Log.d("za","path $photoPath")
+            photoFile = File(photoPath)
             showPhoto.visibility = View.VISIBLE
             takePhoto.visibility = View.GONE
             updateState()
