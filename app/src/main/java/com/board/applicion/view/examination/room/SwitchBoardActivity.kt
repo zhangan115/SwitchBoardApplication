@@ -22,6 +22,8 @@ import com.board.applicion.base.BaseActivity
 import com.board.applicion.mode.DatabaseStore
 import com.board.applicion.mode.databases.*
 import com.bumptech.glide.Glide
+import com.google.gson.Gson
+import com.library.utils.SPHelper
 import com.soundcloud.android.crop.Crop
 import io.objectbox.android.AndroidScheduler
 import io.reactivex.Observable
@@ -88,7 +90,12 @@ class SwitchBoardActivity : BaseActivity() {
                     return@setOnClickListener
                 }
                 //to handle 人工核查
-
+                if (cabinet==null)return@setOnClickListener
+                val intent = Intent(this,CheckByHandActivity::class.java)
+                intent.putExtra("photo",photoFile?.absolutePath)
+                intent.putExtra("cabinetId",cabinet!!.id)
+                SPHelper.write(this,"data","check_data",Gson().toJson(sbCheckData))
+                startActivityForResult(intent,200)
             } else {
                 //show temp 展示模版
                 tempLayout.visibility = View.VISIBLE
