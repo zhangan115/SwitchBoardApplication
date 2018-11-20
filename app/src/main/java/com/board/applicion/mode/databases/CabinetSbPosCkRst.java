@@ -5,6 +5,7 @@ import android.support.annotation.IntDef;
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 import io.objectbox.relation.ToMany;
+import io.objectbox.relation.ToOne;
 
 /**
  * 屏柜压板位置核查结果：CABINET_SB_POS_CK_RST
@@ -33,6 +34,9 @@ public class CabinetSbPosCkRst {
     public long updateTime;
     public int status;
     public ToMany<SbPosCjRstDetail> sbPosCjRstDetailToMany;
+    public ToOne<Cabinet> cabinetToOne;
+    public ToOne<MainControlRoom> mainControlRoomToOne;
+    public ToOne<Substation> substationToOne;
 
     public CabinetSbPosCkRst(long id, long subId, long mcrId, long cabinetId, long checkTime
             , String posImage, String checkValue, String checker, long updateTime, int status) {

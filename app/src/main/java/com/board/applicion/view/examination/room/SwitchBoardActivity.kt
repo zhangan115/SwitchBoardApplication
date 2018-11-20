@@ -16,6 +16,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
+import com.afollestad.materialdialogs.DialogAction
 import com.afollestad.materialdialogs.MaterialDialog
 import com.board.applicion.R
 import com.board.applicion.app.App
@@ -23,10 +24,7 @@ import com.board.applicion.base.BaseActivity
 import com.board.applicion.mode.DatabaseStore
 import com.board.applicion.mode.databases.*
 import com.bumptech.glide.Glide
-import com.google.gson.Gson
-import com.library.utils.SPHelper
 import com.soundcloud.android.crop.Crop
-import io.objectbox.android.AndroidScheduler
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.activity_switch_board.*
 import java.io.File
@@ -36,15 +34,47 @@ class SwitchBoardActivity : BaseActivity() {
 
     private lateinit var cabinetStore: DatabaseStore<Cabinet>
     private lateinit var sbTemplateStore: DatabaseStore<CabinetSbPosTemplate>
-    private val cabinetTemplateData = ArrayList<CabinetSbPosTemplate>()
-    private var cabinet: Cabinet? = null
+    private val cabinetTemplateData = ArrayList<CabinetSbPosTemplate>()//模板数据
+    private var cabinet: Cabinet? = null//屏柜
 
-    private lateinit var cabinetSbPosCkRst: CabinetSbPosCkRst
-    private val sbCheckData = ArrayList<SbPosCjRstDetail>()
-    private var photoFile: File? = null
-    private var photoPath: String? = null
-    private var isCheck = false
-    private var isChecking = false
+    private var cabinetSbPosCkRst: CabinetSbPosCkRst? = null//检查记录
+    private val sbCheckData = ArrayList<SbPosCjRstDetail>()//检查结果集合
+    private var photoFile: File? = null//文件
+    private var photoPath: String? = null//图片地址
+    private var isCheck = false//是否检查
+    private var isChecking = false//正在检查
+
+    private lateinit var cabinetSbPosCkRstStore: DatabaseStore<CabinetSbPosCkRst>//核查记录保存
+    private lateinit var sbPosCjRstDetailStore: DatabaseStore<SbPosCjRstDetail>//核查结果保存
+
+
+    override fun initData() {
+        val id = intent.getLongExtra("id", -1)
+        cabinetStore = DatabaseStore(lifecycle, Cabinet::class.java)
+        cabinetStore.getQueryData(cabinetStore.getQueryBuilder().equal(Cabinet_.id, id).build()) {
+            if (it.isNotEmpty() && it.size == 1) {
+                this.cabinet = it[0]
+                text1.text = it[0].substationToOne.target.name
+                text11.text = it[0].substationToOne.target.name
+                text2.text = it[0].substationToOne.target.voltageRank
+                text22.text = it[0].substationToOne.target.voltageRank
+                text3.text = it[0].mainControlRoomToOne.target.name
+                text33.text = it[0].mainControlRoomToOne.target.name
+                text4.text = it[0].name
+                text44.text = it[0].name
+                text5.text = "${it[0].rowNum} X ${it[0].colNum}"
+                text55.text = "${it[0].rowNum} X ${it[0].colNum}"
+                sbRecycleView.layoutManager = GridLayoutManager(this, cabinet!!.colNum)
+                val adapter = CheckAdapter(sbCheckData, this)
+                sbRecycleView.adapter = adapter
+                showTemp()
+            }
+        }
+        sbTemplateStore = DatabaseStore(lifecycle, CabinetSbPosTemplate::class.java)
+        cabinetSbPosCkRstStore = DatabaseStore(lifecycle, CabinetSbPosCkRst::class.java)
+        sbPosCjRstDetailStore = DatabaseStore(lifecycle, SbPosCjRstDetail::class.java)
+    }
+
 
     override fun initView(savedInstanceState: Bundle?) {
         showPhoto.setOnClickListener {
@@ -70,17 +100,18 @@ class SwitchBoardActivity : BaseActivity() {
             }
             if (!TextUtils.isEmpty(photoPath) && isCheck) {
                 //to save
-                if (cabinet != null) {
-                    cabinetSbPosCkRst = CabinetSbPosCkRst(0, cabinet!!.subId, cabinet!!.mcrId, cabinet!!.id
-                            , System.currentTimeMillis(), photoPath, "", App.instance.getCurrentUser().name
-                            , System.currentTimeMillis(), 0)
+                if (cabinet != null && cabinetSbPosCkRst != null) {
+                    cabinetSbPosCkRst!!.status = 0
+                    cabinetSbPosCkRst!!.checkTime = System.currentTimeMillis()
+                    cabinetSbPosCkRst!!.updateTime = System.currentTimeMillis()
                     for (sb in sbCheckData) {
+                        sb.status = 0
+                        sb.checkTime = System.currentTimeMillis()
+                        sb.updateTime = System.currentTimeMillis()
                         sb.cabinetSbPosCkRstToOne.target = cabinetSbPosCkRst
                     }
-                    cabinetSbPosCkRst.sbPosCjRstDetailToMany.addAll(sbCheckData)
-                    val cabinetSbPosCkRstStore = DatabaseStore(lifecycle, CabinetSbPosCkRst::class.java)
-                    val sbPosCjRstDetailStore = DatabaseStore(lifecycle, SbPosCjRstDetail::class.java)
-                    cabinetSbPosCkRstStore.getBox().put(cabinetSbPosCkRst)
+
+                    cabinetSbPosCkRstStore.getBox().put(cabinetSbPosCkRst!!)
                     sbPosCjRstDetailStore.getBox().put(this.sbCheckData)
                     finish()
                 }
@@ -94,10 +125,8 @@ class SwitchBoardActivity : BaseActivity() {
                 //to handle 人工核查
                 if (cabinet == null) return@setOnClickListener
                 val intent = Intent(this, CheckByHandActivity::class.java)
-                intent.putExtra("photo", photoPath)
-                intent.putExtra("cabinetId", cabinet!!.id)
-
-                startActivityForResult(intent, 200)
+                intent.putExtra("id", cabinetSbPosCkRst!!.id)
+                startActivityForResult(intent, 203)
             } else {
                 //show temp 展示模版
                 tempLayout.visibility = View.VISIBLE
@@ -108,6 +137,25 @@ class SwitchBoardActivity : BaseActivity() {
         }
     }
 
+    override fun onBackAction() {
+        if (isCheck && cabinetSbPosCkRst != null) {
+            MaterialDialog.Builder(this).content("确定放弃当前数据?")
+                    .negativeText("取消").onNegative { dialog, _ -> dialog.dismiss() }
+                    .positiveText("确定").onPositive { dialog, _ ->
+                        //将临时保存的数据删除掉
+                        cabinetSbPosCkRstStore.getBox().remove(cabinetSbPosCkRst!!)
+                        sbPosCjRstDetailStore.getBox().remove(sbCheckData)
+                        dialog.dismiss()
+                        super.onBackAction()
+                    }.build().show()
+        } else {
+            super.onBackAction()
+        }
+    }
+
+    /**
+     * 展示模板
+     */
     private fun showTemp() {
         if (cabinet != null) {
             val adapter = Adapter(cabinetTemplateData, this)
@@ -132,6 +180,9 @@ class SwitchBoardActivity : BaseActivity() {
         }
     }
 
+    /**
+     * 获取当前位置的数据
+     */
     private fun getCurrentData(row: Int, col: Int, list: List<CabinetSbPosTemplate>): CabinetSbPosTemplate? {
         var cab: CabinetSbPosTemplate? = null
         for (cab1 in list) {
@@ -143,6 +194,9 @@ class SwitchBoardActivity : BaseActivity() {
         return cab
     }
 
+    /**
+     * 检查结果
+     */
     private fun checkPhoto() {
         val dis = Observable.just("Test")
                 .delay(3, TimeUnit.SECONDS)
@@ -158,44 +212,34 @@ class SwitchBoardActivity : BaseActivity() {
                                     sbCheckData.add(SbPosCjRstDetail(0, sb.subId, sb.mcrId, sb.cabinetId
                                             , sb.id, System.currentTimeMillis(), sb.name, sb.desc, sb.row, sb.col
                                             , 2, App.instance.getCurrentUser().name
-                                            , System.currentTimeMillis(), 0))
+                                            , System.currentTimeMillis(), 1))// 读取出数据
                                 }
                             }
                         }
+                        cabinetSbPosCkRst = CabinetSbPosCkRst(0, cabinet!!.subId, cabinet!!.mcrId, cabinet!!.id
+                                , System.currentTimeMillis(), photoPath, "", App.instance.getCurrentUser().name
+                                , System.currentTimeMillis(), 1)//读取出本次核查记录(临时保存 status 为1 正式保存后为0)
+                        for (sb in sbCheckData) {
+                            sb.cabinetSbPosCkRstToOne.target = cabinetSbPosCkRst
+                        }
+                        cabinetSbPosCkRst!!.substationToOne.target = cabinet!!.substationToOne.target
+                        cabinetSbPosCkRst!!.mainControlRoomToOne.target = cabinet!!.mainControlRoomToOne.target
+                        cabinetSbPosCkRst!!.cabinetToOne.target = cabinet
+                        cabinetSbPosCkRst!!.sbPosCjRstDetailToMany.addAll(sbCheckData)
+
+                        val rstId = cabinetSbPosCkRstStore.getBox().put(cabinetSbPosCkRst!!)
+                        cabinetSbPosCkRst!!.id = rstId
+                        sbPosCjRstDetailStore.getBox().put(sbCheckData)
                         runOnUiThread {
                             if (sbCheckData.isNotEmpty()) {
                                 showPhoto.visibility = View.GONE
                                 showResultLayout.visibility = View.VISIBLE
                                 sbRecycleView.adapter?.notifyDataSetChanged()
                             }
+                            updateState()
                         }
                     }
-                    updateState()
                 }
-    }
-
-    private fun showTakePhotoChoose() {
-        if (isChecking) return
-        MaterialDialog.Builder(this)
-                .items(R.array.choose_photo)
-                .itemsCallback { _, _, position, _ ->
-                    if (position == 0) {
-                        photoFile = File(App.instance.getPhotoDir(), System.currentTimeMillis().toString() + ".jpg")
-                        val intent = Intent()
-                        intent.action = MediaStore.ACTION_IMAGE_CAPTURE
-                        intent.addCategory(Intent.CATEGORY_DEFAULT)
-                        val contentValues = ContentValues(1)
-                        contentValues.put(MediaStore.Images.Media.DATA, photoFile!!.absolutePath)
-                        val uri = applicationContext.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
-                        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
-                        startActivityForResult(intent, 200)
-                    } else {
-                        val intent = Intent(Intent.ACTION_GET_CONTENT)
-                        intent.type = "image/*"
-                        startActivityForResult(intent, 201)
-                    }
-                }
-                .show()
     }
 
     private fun updateState() {
@@ -232,6 +276,9 @@ class SwitchBoardActivity : BaseActivity() {
                 }
                 201 -> beginCrop(data!!.data!!)
                 Crop.REQUEST_CROP -> handleCrop(resultCode, data!!)
+                203 ->{
+                    finish()
+                }
             }
         }
     }
@@ -246,7 +293,6 @@ class SwitchBoardActivity : BaseActivity() {
             val uri = Crop.getOutput(result)
             Glide.with(this).load(uri).into(showPhoto)
             photoPath = uri.path
-            Log.d("za","path $photoPath")
             photoFile = File(photoPath)
             showPhoto.visibility = View.VISIBLE
             takePhoto.visibility = View.GONE
@@ -256,29 +302,29 @@ class SwitchBoardActivity : BaseActivity() {
         }
     }
 
-    override fun initData() {
-        val id = intent.getLongExtra("id", -1)
-        cabinetStore = DatabaseStore(lifecycle, Cabinet::class.java)
-        cabinetStore.getQueryData(cabinetStore.getQueryBuilder().equal(Cabinet_.id, id).build()) {
-            if (it.isNotEmpty() && it.size == 1) {
-                this.cabinet = it[0]
-                text1.text = it[0].substationToOne.target.name
-                text11.text = it[0].substationToOne.target.name
-                text2.text = it[0].substationToOne.target.voltageRank
-                text22.text = it[0].substationToOne.target.voltageRank
-                text3.text = it[0].mainControlRoomToOne.target.name
-                text33.text = it[0].mainControlRoomToOne.target.name
-                text4.text = it[0].name
-                text44.text = it[0].name
-                text5.text = "${it[0].rowNum} X ${it[0].colNum}"
-                text55.text = "${it[0].rowNum} X ${it[0].colNum}"
-                sbRecycleView.layoutManager = GridLayoutManager(this, cabinet!!.colNum)
-                val adapter = CheckAdapter(sbCheckData, this)
-                sbRecycleView.adapter = adapter
-                showTemp()
-            }
-        }
-        sbTemplateStore = DatabaseStore(lifecycle, CabinetSbPosTemplate::class.java)
+
+    private fun showTakePhotoChoose() {
+        if (isChecking) return
+        MaterialDialog.Builder(this)
+                .items(R.array.choose_photo)
+                .itemsCallback { _, _, position, _ ->
+                    if (position == 0) {
+                        photoFile = File(App.instance.getPhotoDir(), System.currentTimeMillis().toString() + ".jpg")
+                        val intent = Intent()
+                        intent.action = MediaStore.ACTION_IMAGE_CAPTURE
+                        intent.addCategory(Intent.CATEGORY_DEFAULT)
+                        val contentValues = ContentValues(1)
+                        contentValues.put(MediaStore.Images.Media.DATA, photoFile!!.absolutePath)
+                        val uri = applicationContext.contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
+                        startActivityForResult(intent, 200)
+                    } else {
+                        val intent = Intent(Intent.ACTION_GET_CONTENT)
+                        intent.type = "image/*"
+                        startActivityForResult(intent, 201)
+                    }
+                }
+                .show()
     }
 
     private class Adapter(private val dataList: ArrayList<CabinetSbPosTemplate>, private val content: Context)
@@ -320,10 +366,14 @@ class SwitchBoardActivity : BaseActivity() {
         }
 
         override fun onBindViewHolder(holder: CheckViewHolder, position: Int) {
-            when (dataList[position].posMatch) {
-                0 -> holder.imageView.setImageDrawable(content.resources.getDrawable(R.drawable.press_plate__off_success))
-                1 -> holder.imageView.setImageDrawable(content.resources.getDrawable(R.drawable.press_plate__on_fail))
-                else -> holder.imageView.setImageDrawable(content.resources.getDrawable(R.drawable.press_plate_b_off))
+            itemChange(dataList[position].posMatch,holder.imageView)
+        }
+
+        private fun itemChange(type : Int,imageView:ImageView){
+            when (type) {
+                0 -> imageView.setImageDrawable(content.resources.getDrawable(R.drawable.press_plate__off_success))
+                1 -> imageView.setImageDrawable(content.resources.getDrawable(R.drawable.press_plate__on_fail))
+                else -> imageView.setImageDrawable(content.resources.getDrawable(R.drawable.press_plate_b_off))
             }
         }
     }

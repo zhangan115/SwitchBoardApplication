@@ -152,7 +152,7 @@
         </FrameLayout>
 
         <Button
-            android:id="@+id/saveUserButton"
+            android:id="@+id/saveButton"
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:layout_margin="15dp"
