@@ -101,6 +101,8 @@ class SwitchBoardActivity : BaseActivity() {
             if (!TextUtils.isEmpty(photoPath) && isCheck) {
                 //to save
                 if (cabinet != null && cabinetSbPosCkRst != null) {
+                    var isPass = true
+
                     cabinetSbPosCkRst!!.status = 0
                     cabinetSbPosCkRst!!.checkTime = System.currentTimeMillis()
                     cabinetSbPosCkRst!!.updateTime = System.currentTimeMillis()
@@ -108,12 +110,27 @@ class SwitchBoardActivity : BaseActivity() {
                         sb.status = 0
                         sb.checkTime = System.currentTimeMillis()
                         sb.updateTime = System.currentTimeMillis()
+                        if (sb.posMatch != 1) {
+                            isPass = false
+                        }
                         sb.cabinetSbPosCkRstToOne.target = cabinetSbPosCkRst
                     }
+                    if (isPass) {
+                        cabinetSbPosCkRstStore.getBox().put(cabinetSbPosCkRst!!)
+                        sbPosCjRstDetailStore.getBox().put(this.sbCheckData)
+                        finish()
+                    } else {
+                        MaterialDialog.Builder(this)
+                                .content("当前有异常结果，是否保存?")
+                                .negativeText("否")
+                                .positiveText("是").onPositive { _, _ ->
+                                    cabinetSbPosCkRstStore.getBox().put(cabinetSbPosCkRst!!)
+                                    sbPosCjRstDetailStore.getBox().put(this.sbCheckData)
+                                    finish()
+                                }
+                                .build().show()
+                    }
 
-                    cabinetSbPosCkRstStore.getBox().put(cabinetSbPosCkRst!!)
-                    sbPosCjRstDetailStore.getBox().put(this.sbCheckData)
-                    finish()
                 }
             }
         }
@@ -276,7 +293,7 @@ class SwitchBoardActivity : BaseActivity() {
                 }
                 201 -> beginCrop(data!!.data!!)
                 Crop.REQUEST_CROP -> handleCrop(resultCode, data!!)
-                203 ->{
+                203 -> {
                     finish()
                 }
             }
@@ -366,10 +383,10 @@ class SwitchBoardActivity : BaseActivity() {
         }
 
         override fun onBindViewHolder(holder: CheckViewHolder, position: Int) {
-            itemChange(dataList[position].posMatch,holder.imageView)
+            itemChange(dataList[position].posMatch, holder.imageView)
         }
 
-        private fun itemChange(type : Int,imageView:ImageView){
+        private fun itemChange(type: Int, imageView: ImageView) {
             when (type) {
                 0 -> imageView.setImageDrawable(content.resources.getDrawable(R.drawable.press_plate__off_success))
                 1 -> imageView.setImageDrawable(content.resources.getDrawable(R.drawable.press_plate__on_fail))

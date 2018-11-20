@@ -28,17 +28,17 @@ public class SubListAdapter extends BaseExpandableListAdapter {
 
     private ItemClickListener listener;
 
-    interface ItemClickListener {
+    public interface ItemClickListener {
 
         void onItemClick(MainControlRoom room);
 
     }
 
-    void setItemListener(ItemClickListener listener) {
+    public void setItemListener(ItemClickListener listener) {
         this.listener = listener;
     }
 
-    SubListAdapter(Context context, int groupLayout, int childLayout) {
+    public SubListAdapter(Context context, int groupLayout, int childLayout) {
         this.context = context;
         this.groupLayout = groupLayout;
         this.childLayout = childLayout;

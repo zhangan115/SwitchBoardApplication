@@ -28,6 +28,7 @@ public class CabinetSbPosCkRst {
     public long mcrId;
     public long cabinetId;
     public long checkTime;
+    public int checkResult;// 0  通过 1 不通过检查
     public String posImage;
     public String checkValue;
     public String checker;

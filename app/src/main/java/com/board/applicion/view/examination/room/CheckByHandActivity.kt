@@ -28,19 +28,36 @@ class CheckByHandActivity : BaseActivity() {
 
     override fun initView(savedInstanceState: Bundle?) {
         saveButton.setOnClickListener {
+            var isPass = true
             cabinetSbPosCkRst!!.status = 0
             cabinetSbPosCkRst!!.checkTime = System.currentTimeMillis()
             cabinetSbPosCkRst!!.updateTime = System.currentTimeMillis()
             for (sb in sbCheckData) {
+                if (sb.posMatch!=0){
+                    isPass = false
+                }
                 sb.status = 0
                 sb.checkTime = System.currentTimeMillis()
                 sb.updateTime = System.currentTimeMillis()
                 sb.cabinetSbPosCkRstToOne.target = cabinetSbPosCkRst
             }
-            cabinetSbPosCkRstStore.getBox().put(cabinetSbPosCkRst!!)
-            sbPosCjRstDetailStore.getBox().put(this.sbCheckData)
-            setResult(Activity.RESULT_OK)
-            finish()
+            if (isPass){
+                cabinetSbPosCkRstStore.getBox().put(cabinetSbPosCkRst!!)
+                sbPosCjRstDetailStore.getBox().put(this.sbCheckData)
+                setResult(Activity.RESULT_OK)
+                finish()
+            }else{
+                MaterialDialog.Builder(this)
+                        .content("当前有异常结果，是否保存?")
+                        .negativeText("否")
+                        .positiveText("是").onPositive { _, _ ->
+                            cabinetSbPosCkRstStore.getBox().put(cabinetSbPosCkRst!!)
+                            sbPosCjRstDetailStore.getBox().put(this.sbCheckData)
+                            setResult(Activity.RESULT_OK)
+                            finish()
+                        }
+                        .build().show()
+            }
         }
     }
 

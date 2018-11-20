@@ -32,14 +32,7 @@ class ExaminationFragment : BaseFragment() {
     private lateinit var subStore: DatabaseStore<Substation>
     override fun initData() {
         subStore = DatabaseStore(lifecycle, Substation::class.java)
-        subStore.getQueryData(subStore.getQueryBuilder().build()) {
-            dataList.clear()
-            dataList.addAll(it)
-            adapter.notifyDataSetChanged()
-            for (i in 0 until expandableListView.count) {
-                expandableListView.expandGroup(i)
-            }
-        }
+
     }
 
     override fun initView() {
@@ -53,5 +46,13 @@ class ExaminationFragment : BaseFragment() {
             startActivity(intent)
         }
         expandableListView.setAdapter(adapter)
+        subStore.getQueryData(subStore.getQueryBuilder().build()) {
+            dataList.clear()
+            dataList.addAll(it)
+            adapter.notifyDataSetChanged()
+            for (i in 0 until expandableListView.count) {
+                expandableListView.expandGroup(i)
+            }
+        }
     }
 }
