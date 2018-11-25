@@ -1,13 +1,10 @@
 package com.board.applicion.view.deploy.user
 
-import android.os.Bundle
 import android.text.TextUtils
 import android.widget.Button
 import android.widget.Toast
 import com.board.applicion.R
 import com.board.applicion.app.App
-import com.board.applicion.base.BaseActivity
-import com.board.applicion.mode.DatabaseStore
 import com.board.applicion.mode.User
 import com.board.applicion.mode.User_
 import com.board.applicion.view.deploy.BaseAddActivity
