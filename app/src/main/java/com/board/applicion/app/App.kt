@@ -2,16 +2,15 @@ package com.board.applicion.app
 
 import android.app.Application
 import android.os.Environment
-import android.util.Log
-import com.board.applicion.BuildConfig
 import com.board.applicion.mode.MyObjectBox
+import com.board.applicion.mode.SPConstant.SP_CURRENT_USER
+import com.board.applicion.mode.SPConstant.SP_NAME
 import com.board.applicion.mode.User
 import com.google.gson.Gson
 import com.library.utils.SPHelper
 import com.videogo.openapi.EZOpenSDK
 import java.io.File
 import io.objectbox.BoxStore
-import io.objectbox.android.AndroidObjectBrowser
 
 
 
@@ -35,7 +34,8 @@ class App : Application() {
         // 萤石云开放平台 初始化
         EZOpenSDK.showSDKLog(true)
         EZOpenSDK.enableP2P(false)
-        EZOpenSDK.initLib(this,"")
+        EZOpenSDK.initSDK(this,"2c9094b4533e4413a47ddf22a206ac6d")
+        EZOpenSDK.setAccessToken("at.cegi24px250bri6s6m7x2bxz76848qnr-4ciiha8tc6-1tdumzz-5avzwmqye")
     }
 
     fun createPhotoDir() {
@@ -53,12 +53,12 @@ class App : Application() {
     var user:User? = null
     fun saveCurrentUser (user:User){
         this.user = user
-        SPHelper.write(this,"user","currentUser",(Gson().toJson(user)))
+        SPHelper.write(this, SP_NAME,SP_CURRENT_USER,(Gson().toJson(user)))
     }
 
     fun getCurrentUser() : User{
         if (user == null){
-            val json = SPHelper.readString(this,"user","currentUser")
+            val json = SPHelper.readString(this,SP_NAME,SP_CURRENT_USER)
             user = Gson().fromJson(json,User::class.java)
         }
         return user!!

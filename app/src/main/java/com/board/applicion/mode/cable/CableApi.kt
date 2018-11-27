@@ -9,7 +9,7 @@ interface CableApi {
     /**
      * 1,获取电缆列表
      */
-    @GET("api/cable/listPage")
+    @GET("voms/cable/app/list.json")
     fun getCableList(@QueryMap() requestMap: Map<String, String>): Call<CableBaseEntity<List<CableBean>>>
 
 }

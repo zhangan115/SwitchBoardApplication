@@ -5,6 +5,8 @@ import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.OnLifecycleEvent
 import android.support.annotation.Nullable
 import com.board.applicion.app.App
+import com.board.applicion.mode.SPConstant.SP_BASE_URL
+import com.board.applicion.mode.SPConstant.SP_NAME
 import com.library.utils.SPHelper
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -32,7 +34,7 @@ class CableHttpManager<T>(val lifecycle: Lifecycle) : LifecycleObserver {
                 .writeTimeout(20, TimeUnit.SECONDS)
                 .build()
         retrofit = Retrofit.Builder()
-                .baseUrl(SPHelper.readString(App.instance,"user","base_url"))
+                .baseUrl(SPHelper.readString(App.instance,SP_NAME, SP_BASE_URL,"http://118.24.162.247:8080/"))
                 .client(okHttpClient)
                 .addConverterFactory(ProtoConverterFactory.create())
                 .addConverterFactory(ScalarsConverterFactory.create())
