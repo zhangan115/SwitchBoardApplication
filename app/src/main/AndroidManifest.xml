@@ -4,7 +4,6 @@
 
     <!--外存储写权限，构建语法需要用到此权限 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
     <!-- Required to provide the web interface -->
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- Required to run keep-alive service when targeting API 28 or higher -->
@@ -196,6 +195,12 @@
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <!--图片手动裁剪-->
         <activity android:name="com.soundcloud.android.crop.CropImageActivity" />
+        <!---->
+        <activity
+            android:name="com.videogo.main.EzvizWebViewActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|keyboardHidden">
+        </activity>
     </application>
 
 </manifest>

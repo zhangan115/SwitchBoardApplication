@@ -7,9 +7,11 @@ import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem
 import com.board.applicion.R
 import com.board.applicion.app.App
 import com.board.applicion.base.BaseActivity
+import com.board.applicion.view.cable.CableFragment
 import com.board.applicion.view.deploy.DeployFragment
 import com.board.applicion.view.examination.ExaminationFragment
 import com.board.applicion.view.search.SearchFragment
+import com.board.applicion.view.video.VideoFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.AppSettingsDialog
@@ -23,7 +25,9 @@ class MainActivity : BaseActivity(), EasyPermissions.PermissionCallbacks {
 
     override fun initView(savedInstanceState: Bundle?) {
         mFragments = getFragments()
+        bottomNavigation.addItem(AHBottomNavigationItem("电缆巡检", R.drawable.examination_b))
         bottomNavigation.addItem(AHBottomNavigationItem("压板核查", R.drawable.examination_b))
+        bottomNavigation.addItem(AHBottomNavigationItem("监测预警", R.drawable.examination_b))
         bottomNavigation.addItem(AHBottomNavigationItem("查询统计", R.drawable.search_b))
         bottomNavigation.addItem(AHBottomNavigationItem("配置管理", R.drawable.deploy_b))
         bottomNavigation.setTitleTextSizeInSp(14f, 14f)
@@ -74,19 +78,29 @@ class MainActivity : BaseActivity(), EasyPermissions.PermissionCallbacks {
 
     private fun getFragments(): ArrayList<Fragment> {
         val fragments = ArrayList<Fragment>()
-        var examinationFragment: ExaminationFragment? = supportFragmentManager.findFragmentByTag("tag_0") as ExaminationFragment?
+        var cableFragment: CableFragment? = supportFragmentManager.findFragmentByTag("tag_0") as CableFragment?
+        if (cableFragment == null) {
+            cableFragment = CableFragment.getFragment()
+        }
+        var examinationFragment: ExaminationFragment? = supportFragmentManager.findFragmentByTag("tag_1") as ExaminationFragment?
         if (examinationFragment == null) {
             examinationFragment = ExaminationFragment.getFragment()
         }
-        var searchFragment: SearchFragment? = supportFragmentManager.findFragmentByTag("tag_1") as SearchFragment?
+        var videoFragment: VideoFragment? = supportFragmentManager.findFragmentByTag("tag_2") as VideoFragment?
+        if (videoFragment == null) {
+            videoFragment = VideoFragment.getFragment()
+        }
+        var searchFragment: SearchFragment? = supportFragmentManager.findFragmentByTag("tag_3") as SearchFragment?
         if (searchFragment == null) {
             searchFragment = SearchFragment.getFragment()
         }
-        var deployFragment: DeployFragment? = supportFragmentManager.findFragmentByTag("tag_2") as DeployFragment?
+        var deployFragment: DeployFragment? = supportFragmentManager.findFragmentByTag("tag_4") as DeployFragment?
         if (deployFragment == null) {
             deployFragment = DeployFragment.getFragment()
         }
+        fragments.add(cableFragment)
         fragments.add(examinationFragment)
+        fragments.add(videoFragment)
         fragments.add(searchFragment)
         fragments.add(deployFragment)
         return fragments

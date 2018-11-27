@@ -8,6 +8,7 @@ import com.board.applicion.mode.MyObjectBox
 import com.board.applicion.mode.User
 import com.google.gson.Gson
 import com.library.utils.SPHelper
+import com.videogo.openapi.EZOpenSDK
 import java.io.File
 import io.objectbox.BoxStore
 import io.objectbox.android.AndroidObjectBrowser
@@ -29,7 +30,12 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+        //数据库初始化
         boxStore = MyObjectBox.builder().androidContext(this).build()
+        // 萤石云开放平台 初始化
+        EZOpenSDK.showSDKLog(true)
+        EZOpenSDK.enableP2P(false)
+        EZOpenSDK.initLib(this,"")
     }
 
     fun createPhotoDir() {
