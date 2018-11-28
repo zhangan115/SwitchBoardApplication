@@ -1,5 +1,6 @@
 package com.board.applicion.view.cable
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.widget.Toast
@@ -26,17 +27,18 @@ class CableFragment : BaseFragment() {
     private val cableList = ArrayList<CableBean>()
 
     override fun getContentView(): Int {
-       return R.layout.fragment_cable
+        return R.layout.fragment_cable
     }
 
     override fun initData() {
-        val baseUrl = SPHelper.readString(activity,SP_NAME,SP_BASE_URL)
-        if (TextUtils.isEmpty(baseUrl)){
+        val baseUrl = SPHelper.readString(activity, SP_NAME, SP_BASE_URL)
+        if (TextUtils.isEmpty(baseUrl)) {
             //没有配置地址
             requestCableList()
-        }else{
+        } else {
             requestCableList()
         }
+        startActivity(Intent(activity, CableListActivity::class.java))
     }
 
     /**
@@ -47,7 +49,7 @@ class CableFragment : BaseFragment() {
         val requestMap = HashMap<String, String>()
         cableHttp.requestData(cableHttp.retrofit.create(CableApi::class.java).getCableList(requestMap), {
             cableList.clear()
-            if (it!=null){
+            if (it != null) {
                 cableList.addAll(it)
             }
 
@@ -63,7 +65,7 @@ class CableFragment : BaseFragment() {
     /**
      * 扫码查找电缆
      */
-    private fun scanner (resultStr : String?) {
+    private fun scanner(resultStr: String?) {
 
     }
 }
