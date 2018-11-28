@@ -53,7 +53,6 @@ class VideoFragment : BaseFragment() {
                 } finally {
                     it.onComplete()
                 }
-
             }
             requestDeviceList = observable.subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
