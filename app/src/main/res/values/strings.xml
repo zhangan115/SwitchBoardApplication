@@ -14,7 +14,12 @@
     <string name="kv_500">500kV</string>
     <string name="kv_750">750kV</string>
     <string name="kv_1000">1000kV</string>
-
+    <string name="remoteplayback_over_link">设备连接数过大，停止其他连接后再试试吧</string>
+    <string name="realplay_fail_connect_device">播放失败，连接设备异常</string>
+    <string name="realplay_fail_device_not_exist">设备不在线</string>
+    <string name="realplay_play_fail">视频播放失败</string>
     <string name="str_choose_camera">拍照</string>
     <string name="str_choose_photo">相册</string>
+    <string name="string_rate">"当前：%1$s"</string>
+    <string name="string_flow">"合计：%1$s"</string>
 </resources>
