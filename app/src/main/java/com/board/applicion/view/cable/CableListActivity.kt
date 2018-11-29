@@ -10,10 +10,12 @@ import android.view.View
 import android.widget.Toast
 import com.board.applicion.R
 import com.board.applicion.base.BaseActivity
+import com.board.applicion.mode.SPConstant
 import com.board.applicion.mode.cable.CableApi
 import com.board.applicion.mode.cable.CableBean
 import com.board.applicion.mode.cable.CableHttpManager
 import com.board.applicion.utils.DevBeep
+import com.library.utils.SPHelper
 import com.olc.uhf.UhfAdapter
 import com.olc.uhf.UhfManager
 import com.olc.uhf.tech.ISO1800_6C
@@ -139,13 +141,12 @@ class CableListActivity : BaseActivity() {
             finish()
             return
         }
-        cableHttp.requestData(cableHttp.retrofit.create(CableApi::class.java).getCableList(id), {
+        cableHttp.requestData(cableHttp.retrofit?.create(CableApi::class.java)?.getCableList(id), {
             dataList.clear()
             if (it != null) {
                 dataList.addAll(it)
             }
             if (dataList.isNotEmpty()) {
-
                 noDataTv.visibility = View.GONE
                 adapter?.setData(dataList)
                 adapter?.notifyDataSetChanged()
@@ -171,15 +172,19 @@ class CableListActivity : BaseActivity() {
 
     private fun scanner(result: String) {
         var searchCable: CableBean? = null
-        for (cable in dataList) {
-            if (TextUtils.equals(cable.id.toString(), result)) {
+        var position = -1
+        for (index in 0 until dataList.size) {
+            if (TextUtils.equals(dataList[index].id.toString(), result)) {
                 //查找到了数据
-                searchCable = cable
+                searchCable = dataList[index]
+                position = index
                 break
             }
         }
         if (searchCable == null) {
             Toast.makeText(this, "没有找到匹配数据", Toast.LENGTH_SHORT).show()
+        } else {
+            expandableListView.expandGroup(position, true)
         }
     }
 

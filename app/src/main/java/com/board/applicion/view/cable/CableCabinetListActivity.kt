@@ -31,13 +31,7 @@ class CableCabinetListActivity : BaseActivity() {
     }
 
     override fun initData() {
-        val baseUrl = SPHelper.readString(this, SPConstant.SP_NAME, SPConstant.SP_BASE_URL)
-        if (TextUtils.isEmpty(baseUrl)) {
-            //没有配置地址
-            requestData()
-        } else {
-            requestData()
-        }
+        requestData()
     }
 
     override fun getContentView(): Int {
@@ -54,7 +48,7 @@ class CableCabinetListActivity : BaseActivity() {
         if (id == -1L) {
             finish()
         }
-        cableHttp.requestData(cableHttp.retrofit.create(CableApi::class.java).getCabinetList(id), {
+        cableHttp.requestData(cableHttp.retrofit?.create(CableApi::class.java)?.getCabinetList(id), {
             dataList.clear()
             if (it != null)
                 dataList.addAll(it)

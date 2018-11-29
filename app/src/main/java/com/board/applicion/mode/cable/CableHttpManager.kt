@@ -23,28 +23,45 @@ import java.util.concurrent.TimeUnit
 
 class CableHttpManager<T>(val lifecycle: Lifecycle) : LifecycleObserver {
 
-    private val okHttpClient: OkHttpClient
-    val retrofit: Retrofit
+    private var okHttpClient: OkHttpClient? = null
+    var retrofit: Retrofit? = null
+
     init {
-        lifecycle.addObserver(this)
-        okHttpClient = OkHttpClient().newBuilder()
-                .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-                .connectTimeout(10, TimeUnit.SECONDS)
-                .readTimeout(10, TimeUnit.SECONDS)
-                .writeTimeout(20, TimeUnit.SECONDS)
-                .build()
-        retrofit = Retrofit.Builder()
-                .baseUrl(SPHelper.readString(App.instance,SP_NAME, SP_BASE_URL,"http://118.24.162.247:8080/"))
-                .client(okHttpClient)
-                .addConverterFactory(ProtoConverterFactory.create())
-                .addConverterFactory(ScalarsConverterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
-                .build()
+        try {
+            lifecycle.addObserver(this)
+            okHttpClient = OkHttpClient().newBuilder()
+                    .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+                    .connectTimeout(10, TimeUnit.SECONDS)
+                    .readTimeout(10, TimeUnit.SECONDS)
+                    .writeTimeout(20, TimeUnit.SECONDS)
+                    .build()
+            var baseUrl = SPHelper.readString(App.instance, SP_NAME, SP_BASE_URL, "http://118.24.162.247:8080/")
+            if (baseUrl.startsWith("http://") && baseUrl.endsWith("/")) {
+
+            } else {
+                baseUrl = "http://118.24.162.247:8080/"
+            }
+            if (okHttpClient != null)
+                retrofit = Retrofit.Builder()
+                        .baseUrl(baseUrl)
+                        .client(okHttpClient!!)
+                        .addConverterFactory(ProtoConverterFactory.create())
+                        .addConverterFactory(ScalarsConverterFactory.create())
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build()
+        } catch (e: Exception) {
+
+        }
+
     }
 
     @Nullable
-    fun requestData(call: Call<CableBaseEntity<T>>, successCallBack: (T?) -> Unit, failCallBack: (String?) -> Unit) {
+    fun requestData(call: Call<CableBaseEntity<T>>?, successCallBack: (T?) -> Unit, failCallBack: (String?) -> Unit) {
         try {
+            if (call == null) {
+                failCallBack("请求失败！")
+                return
+            }
             call.enqueue(object : Callback<CableBaseEntity<T>> {
 
                 override fun onFailure(call: Call<CableBaseEntity<T>>?, t: Throwable?) {
