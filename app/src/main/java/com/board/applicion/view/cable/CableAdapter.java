@@ -89,7 +89,7 @@ public class CableAdapter extends BaseExpandableListAdapter {
             holder = (GroupViewHolder) convertView.getTag();
         }
         if (groupPosition == 0) {
-            holder.mLine.setVisibility(View.GONE);
+            holder.mLine.setVisibility(View.VISIBLE);
         } else {
             holder.mLine.setVisibility(View.VISIBLE);
         }

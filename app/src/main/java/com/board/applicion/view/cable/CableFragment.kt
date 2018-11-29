@@ -80,6 +80,9 @@ class CableFragment : BaseFragment() {
 
 
     private fun showSetBaseUrlDialog() {
+        if (TextUtils.isEmpty(inputBaseUrl)) {
+            inputBaseUrl = "118.24.162.247:8080"
+        }
         MaterialDialog.Builder(activity!!)
                 .input("请输入请求IP", inputBaseUrl, false) { dialog, input -> inputBaseUrl = input?.toString() ?: "" }
                 .negativeText("取消")
@@ -108,7 +111,7 @@ class CableFragment : BaseFragment() {
     }
 
     private fun checkBaseUrl(): Boolean {
-        if (TextUtils.isEmpty(inputBaseUrl))return false
+        if (TextUtils.isEmpty(inputBaseUrl)) return false
         if (!inputBaseUrl!!.startsWith("http://")) {
             inputBaseUrl = "http://$inputBaseUrl"
         }

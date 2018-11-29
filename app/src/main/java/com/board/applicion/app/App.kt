@@ -35,7 +35,6 @@ class App : Application() {
         EZOpenSDK.showSDKLog(true)
         EZOpenSDK.enableP2P(false)
         EZOpenSDK.initSDK(this,"2c9094b4533e4413a47ddf22a206ac6d")
-        EZOpenSDK.setAccessToken("at.cegi24px250bri6s6m7x2bxz76848qnr-4ciiha8tc6-1tdumzz-5avzwmqye")
     }
 
     fun createPhotoDir() {
