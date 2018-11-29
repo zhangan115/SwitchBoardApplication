@@ -6,8 +6,13 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.text.TextUtils
+import android.view.View
+import android.widget.Toast
 import com.board.applicion.R
 import com.board.applicion.base.BaseActivity
+import com.board.applicion.mode.cable.CableApi
+import com.board.applicion.mode.cable.CableBean
+import com.board.applicion.mode.cable.CableHttpManager
 import com.board.applicion.utils.DevBeep
 import com.olc.uhf.UhfAdapter
 import com.olc.uhf.UhfManager
@@ -26,6 +31,10 @@ class CableListActivity : BaseActivity() {
     private var supportRFID = true
     private var iso6C: ISO1800_6C? = null
     private var isReadRFID = true
+    private var subName: String? = null
+    private var roomName: String? = null
+    private var adapter: CableAdapter? = null
+    private val dataList = ArrayList<CableBean>()
 
     companion object {
         var huManager: UhfManager? = null
@@ -41,13 +50,13 @@ class CableListActivity : BaseActivity() {
         try {
             unregisterReceiver(scannerBr)
         } catch (e: Exception) {
-
+            e.printStackTrace()
         }
     }
 
     override fun initView(savedInstanceState: Bundle?) {
         readRFIDBtn.setOnClickListener { _ ->
-            if (supportRFID && isReadRFID) {
+            if (supportRFID && isReadRFID && dataList.isNotEmpty()) {
                 isReadRFID = false
                 val observable = Observable.create<String> {
                     try {
@@ -96,9 +105,14 @@ class CableListActivity : BaseActivity() {
                         })
             }
         }
+        noDataTv.setOnClickListener {
+            requestData()
+        }
     }
 
     override fun initData() {
+        subName = intent.getStringExtra("subName")
+        roomName = intent.getStringExtra("roomName")
         scannerBr = ScannerBr()
         scannerBr!!.cableListActivity = WeakReference(this)
         huManager = UhfAdapter.getUhfManager(this)
@@ -111,18 +125,62 @@ class CableListActivity : BaseActivity() {
                 this.supportRFID = false
             }
         }
+        adapter = CableAdapter(this, subName, roomName, R.layout.item_cable_group, R.layout.item_cable_child)
+        expandableListView.setAdapter(adapter)
+        requestData()
     }
+
+    private fun requestData() {
+        noDataTv.text = "正在加载..."
+        noDataTv.visibility = View.VISIBLE
+        val cableHttp = CableHttpManager<List<CableBean>>(lifecycle)
+        val id = intent.getLongExtra("id", -1L)
+        if (id == -1L) {
+            finish()
+            return
+        }
+        cableHttp.requestData(cableHttp.retrofit.create(CableApi::class.java).getCableList(id), {
+            dataList.clear()
+            if (it != null) {
+                dataList.addAll(it)
+            }
+            if (dataList.isNotEmpty()) {
+
+                noDataTv.visibility = View.GONE
+                adapter?.setData(dataList)
+                adapter?.notifyDataSetChanged()
+            } else {
+                noDataTv.text = "没有数据,点击重试!"
+                noDataTv.visibility = View.VISIBLE
+            }
+        }, {
+            noDataTv.text = "没有数据,点击重试!."
+            noDataTv.visibility = View.VISIBLE
+            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+        })
+    }
+
 
     override fun getContentView(): Int {
         return R.layout.activity_cable_list
     }
 
     override fun getToolBarTitle(): String? {
-        return "电缆列表"
+        return intent.getStringExtra("title")
     }
 
     private fun scanner(result: String) {
-
+        var searchCable: CableBean? = null
+        for (cable in dataList) {
+            if (TextUtils.equals(cable.id.toString(), result)) {
+                //查找到了数据
+                searchCable = cable
+                break
+            }
+        }
+        if (searchCable == null) {
+            Toast.makeText(this, "没有找到匹配数据", Toast.LENGTH_SHORT).show()
+        }
     }
 
     class ScannerBr : BroadcastReceiver() {
@@ -137,6 +195,5 @@ class CableListActivity : BaseActivity() {
                 }
             }
         }
-
     }
 }
