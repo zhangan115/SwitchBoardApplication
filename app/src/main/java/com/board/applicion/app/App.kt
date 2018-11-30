@@ -12,9 +12,6 @@ import com.videogo.openapi.EZOpenSDK
 import java.io.File
 import io.objectbox.BoxStore
 
-
-
-
 class App : Application() {
 
     companion object {

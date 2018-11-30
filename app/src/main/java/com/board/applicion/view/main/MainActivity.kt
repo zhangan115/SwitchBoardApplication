@@ -26,8 +26,8 @@ class MainActivity : BaseActivity(), EasyPermissions.PermissionCallbacks {
     override fun initView(savedInstanceState: Bundle?) {
         mFragments = getFragments()
         bottomNavigation.addItem(AHBottomNavigationItem("压板核查", R.drawable.examination_b))
-        bottomNavigation.addItem(AHBottomNavigationItem("监测预警", R.drawable.examination_b))
-        bottomNavigation.addItem(AHBottomNavigationItem("电缆巡检", R.drawable.examination_b))
+        bottomNavigation.addItem(AHBottomNavigationItem("监测预警", R.drawable.video_b))
+        bottomNavigation.addItem(AHBottomNavigationItem("电缆巡检", R.drawable.dianlan_b))
         bottomNavigation.addItem(AHBottomNavigationItem("查询统计", R.drawable.search_b))
         bottomNavigation.addItem(AHBottomNavigationItem("配置管理", R.drawable.deploy_b))
         bottomNavigation.setTitleTextSizeInSp(14f, 14f)
