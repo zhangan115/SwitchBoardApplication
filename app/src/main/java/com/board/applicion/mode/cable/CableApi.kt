@@ -26,5 +26,11 @@ interface CableApi {
     @GET("voms/api/app/cable/list.json")
     fun getCableList(@Query("stCabinetId") stCabinetId: Long): Call<CableBaseEntity<List<CableBean>>>
 
+    /**
+     * 4,获取电缆详情
+     */
+    @GET("voms/api/app/cable/selectByKey")
+    fun getCable(@Query("id") id: String): Call<CableBaseEntity<CableBean>>
+
 
 }

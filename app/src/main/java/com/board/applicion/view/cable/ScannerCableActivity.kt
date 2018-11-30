@@ -6,17 +6,15 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
 import android.view.View
 import android.widget.Toast
+import com.afollestad.materialdialogs.MaterialDialog
 import com.board.applicion.R
 import com.board.applicion.base.BaseActivity
-import com.board.applicion.mode.SPConstant
 import com.board.applicion.mode.cable.CableApi
 import com.board.applicion.mode.cable.CableBean
 import com.board.applicion.mode.cable.CableHttpManager
 import com.board.applicion.utils.DevBeep
-import com.library.utils.SPHelper
 import com.olc.uhf.UhfAdapter
 import com.olc.uhf.UhfManager
 import com.olc.uhf.tech.ISO1800_6C
@@ -26,35 +24,19 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_cable_list.*
 import org.json.JSONObject
-import java.lang.ref.WeakReference
 
-class CableListActivity : BaseActivity() {
+class ScannerCableActivity : BaseActivity() {
 
-    private var scannerBr: ScannerBr? = null
+    private var scannerBr: CableListActivity.ScannerBr? = null
     private var supportRFID = true
     private var iso6C: ISO1800_6C? = null
     private var isReadRFID = true
     private var adapter: CableAdapter? = null
     private val dataList = ArrayList<CableBean>()
-    private var subName: String? = null
-    private var roomName: String? = null
+    private var loadingDialog: MaterialDialog? = null
 
     companion object {
         var huManager: UhfManager? = null
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        registerReceiver(scannerBr, IntentFilter("com.barcode.sendBroadcast"))
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        try {
-            unregisterReceiver(scannerBr)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
     }
 
     override fun initView(savedInstanceState: Bundle?) {
@@ -106,73 +88,10 @@ class CableListActivity : BaseActivity() {
                         }, {
                             isReadRFID = true
                         })
-            }
-        }
-        noDataTv.setOnClickListener {
-            requestData()
-        }
-    }
-
-    override fun initData() {
-        subName = intent.getStringExtra("subName")
-        roomName = intent.getStringExtra("roomName")
-        scannerBr = ScannerBr()
-        scannerBr!!.cableListActivity = WeakReference(this)
-        huManager = UhfAdapter.getUhfManager(this)
-        if (huManager != null) {
-            val canOpen = huManager!!.open()
-            if (canOpen) {
-                iso6C = huManager!!.isO1800_6C
-                DevBeep.init(this)
             } else {
-                this.supportRFID = false
+                scanner("100003")
             }
         }
-        adapter = CableAdapter(this, R.layout.item_cable_group, R.layout.item_cable_child)
-        expandableListView.setAdapter(adapter)
-        requestData()
-    }
-
-    private fun requestData() {
-        noDataTv.text = "正在加载..."
-        noDataTv.visibility = View.VISIBLE
-        val cableHttp = CableHttpManager<List<CableBean>>(lifecycle)
-        val id = intent.getLongExtra("id", -1L)
-        if (id == -1L) {
-            finish()
-            return
-        }
-        cableHttp.requestData(cableHttp.retrofit?.create(CableApi::class.java)?.getCableList(id), {
-            dataList.clear()
-            if (it != null) {
-                dataList.addAll(it)
-            }
-            if (dataList.isNotEmpty()) {
-                for (data in dataList) {
-                    data.substationName = this.subName
-                    data.mcrName = this.roomName
-                }
-                noDataTv.visibility = View.GONE
-                adapter?.setData(dataList)
-                adapter?.notifyDataSetChanged()
-            } else {
-                noDataTv.text = "没有数据,点击重试!"
-                noDataTv.visibility = View.VISIBLE
-            }
-        }, {
-            noDataTv.text = "没有数据,点击重试!."
-            noDataTv.visibility = View.VISIBLE
-            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
-        })
-    }
-
-
-    override fun getContentView(): Int {
-        return R.layout.activity_cable_list
-    }
-
-    override fun getToolBarTitle(): String? {
-        return intent.getStringExtra("title")
     }
 
     private fun scanner(result: String) {
@@ -187,22 +106,86 @@ class CableListActivity : BaseActivity() {
             }
         }
         if (searchCable == null) {
-            Toast.makeText(this, "没有找到匹配数据", Toast.LENGTH_SHORT).show()
+            searchCable(result)
         } else {
             expandableListView.expandGroup(position, true)
         }
     }
 
-    class ScannerBr : BroadcastReceiver() {
+    private fun searchCable(id: String) {
+        if (loadingDialog == null) {
+            loadingDialog = MaterialDialog.Builder(this).progressIndeterminateStyle(true).build()
+        }
+        loadingDialog!!.show()
+        val cableHttp = CableHttpManager<CableBean>(lifecycle)
+        cableHttp.requestData(cableHttp.retrofit?.create(CableApi::class.java)?.getCable(id), {
+            if (it != null) {
+                dataList.add(0, it)
+                if (dataList.isNotEmpty()) {
+                    noDataTv.visibility = View.GONE
+                    adapter?.setData(dataList)
+                    adapter?.notifyDataSetChanged()
+                    expandableListView.expandGroup(0, true)
+                } else {
+                    noDataTv.text = "没有数据!"
+                    noDataTv.visibility = View.VISIBLE
+                }
+            } else {
+                Toast.makeText(this, "没有找到数据！", Toast.LENGTH_SHORT).show()
+            }
+            loadingDialog!!.dismiss()
+        }, {
+            Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
+            loadingDialog!!.dismiss()
+        })
+    }
 
-        var cableListActivity: WeakReference<CableListActivity>? = null
+    override fun initData() {
+        scannerBr = CableListActivity.ScannerBr()
+        huManager = UhfAdapter.getUhfManager(this)
+        if (huManager != null) {
+            val canOpen = huManager!!.open()
+            if (canOpen) {
+                iso6C = huManager!!.isO1800_6C
+                DevBeep.init(this)
+            } else {
+                this.supportRFID = false
+            }
+        } else {
+            this.supportRFID = false
+        }
+        adapter = CableAdapter(this, R.layout.item_cable_group, R.layout.item_cable_child)
+        expandableListView.setAdapter(adapter)
+    }
+
+    override fun getContentView(): Int {
+        return R.layout.activity_scanner_cable
+    }
+
+    override fun getToolBarTitle(): String? {
+        return "查找电缆"
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        registerReceiver(scannerBr, IntentFilter("com.barcode.sendBroadcast"))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        try {
+            unregisterReceiver(scannerBr)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    inner class ScannerBr : BroadcastReceiver() {
 
         override fun onReceive(context: Context?, intent: Intent?) {
             val result = intent?.getStringExtra("BARCODE")
             if (!TextUtils.isEmpty(result)) {
-                if (cableListActivity != null) {
-                    cableListActivity!!.get()?.scanner(JSONObject(result).getString("CABLE_ID"))
-                }
+                scanner(JSONObject(result).getString("CABLE_ID"))
             }
         }
     }

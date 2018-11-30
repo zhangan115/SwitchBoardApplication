@@ -28,11 +28,20 @@
                 android:textSize="18sp" />
 
             <ImageView
+                android:id="@+id/scannerIv"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="right"
+                android:layout_marginRight="10dp"
+                android:src="@mipmap/ic_launcher" />
+
+            <ImageView
                 android:id="@+id/settingIv"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_gravity="right"
-                android:layout_marginRight="10dp" />
+                android:layout_marginRight="10dp"
+                android:src="@mipmap/ic_launcher" />
 
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>

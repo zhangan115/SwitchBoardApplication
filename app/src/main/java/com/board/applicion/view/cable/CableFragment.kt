@@ -103,6 +103,9 @@ class CableFragment : BaseFragment() {
         settingIv.setOnClickListener {
             showSetBaseUrlDialog()
         }
+        scannerIv.setOnClickListener {
+            startActivity(Intent(activity, ScannerCableActivity::class.java))
+        }
     }
 
     private fun needSetBaseUrl(): Boolean {

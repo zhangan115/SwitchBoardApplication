@@ -4,7 +4,6 @@
     android:layout_height="wrap_content"
     android:background="@color/colorWhite"
     android:orientation="vertical"
-    android:paddingLeft="20dp"
     android:paddingRight="20dp">
 
     <LinearLayout
@@ -14,18 +13,18 @@
         android:paddingTop="10dp">
 
         <TextView
-            android:layout_width="100dp"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
+            android:gravity="right"
             android:text="变电站:"
-            android:textColor="@color/colorText333"
+            android:textColor="@color/colorText666"
             android:textSize="15sp" />
 
         <TextView
             android:id="@+id/text1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:textColor="@color/colorText666"
+            android:textColor="@color/colorText333"
             android:textSize="15sp" />
     </LinearLayout>
 
@@ -36,19 +35,19 @@
         android:paddingTop="10dp">
 
         <TextView
-            android:layout_width="100dp"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
+            android:gravity="right"
             android:text="主控室:"
-            android:textColor="@color/colorText333"
+            android:textColor="@color/colorText666"
             android:textSize="15sp" />
 
         <TextView
             android:id="@+id/text2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
             android:text=""
-            android:textColor="@color/colorText666"
+            android:textColor="@color/colorText333"
             android:textSize="15sp" />
     </LinearLayout>
 
@@ -59,18 +58,18 @@
         android:paddingTop="10dp">
 
         <TextView
-            android:layout_width="100dp"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
+            android:gravity="right"
             android:text="电缆编号:"
-            android:textColor="@color/colorText333"
+            android:textColor="@color/colorText666"
             android:textSize="15sp" />
 
         <TextView
             android:id="@+id/text3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:textColor="@color/colorText666"
+            android:textColor="@color/colorText333"
             android:textSize="15sp" />
     </LinearLayout>
 
@@ -81,18 +80,18 @@
         android:paddingTop="10dp">
 
         <TextView
-            android:layout_width="100dp"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:text="起    点:"
-            android:textColor="@color/colorText333"
+            android:gravity="right"
+            android:text="起点:"
+            android:textColor="@color/colorText666"
             android:textSize="15sp" />
 
         <TextView
             android:id="@+id/text4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:textColor="@color/colorText666"
+            android:textColor="@color/colorText333"
             android:textSize="15sp" />
     </LinearLayout>
 
@@ -103,18 +102,18 @@
         android:paddingTop="10dp">
 
         <TextView
-            android:layout_width="100dp"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:text="终    点:"
-            android:textColor="@color/colorText333"
+            android:gravity="right"
+            android:text="终点:"
+            android:textColor="@color/colorText666"
             android:textSize="15sp" />
 
         <TextView
             android:id="@+id/text5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:textColor="@color/colorText666"
+            android:textColor="@color/colorText333"
             android:textSize="15sp" />
     </LinearLayout>
 
@@ -126,18 +125,18 @@
         android:paddingBottom="10dp">
 
         <TextView
-            android:layout_width="100dp"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:text="规    格:"
-            android:textColor="@color/colorText333"
+            android:gravity="right"
+            android:text="规格:"
+            android:textColor="@color/colorText666"
             android:textSize="15sp" />
 
         <TextView
             android:id="@+id/text6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:textColor="@color/colorText666"
+            android:textColor="@color/colorText333"
             android:textSize="15sp" />
     </LinearLayout>
 </LinearLayout>

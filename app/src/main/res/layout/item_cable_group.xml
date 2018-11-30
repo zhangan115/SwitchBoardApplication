@@ -22,18 +22,21 @@
             android:id="@+id/cableName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="12dp"
+            android:drawableLeft="@drawable/line_r"
+            android:drawablePadding="10dp"
+            android:paddingLeft="12dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
             android:textColor="@color/colorText333"
-            android:textSize="16sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/idName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:padding="12dp"
-            android:textColor="@color/colorText333"
-            android:textSize="16sp" />
+            android:textColor="#4e7cfd"
+            android:textSize="18sp" />
 
         <ImageView
             android:id="@+id/state"

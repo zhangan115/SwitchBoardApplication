@@ -1,6 +1,7 @@
 package com.board.applicion.mode.cable;
 
 public class CableBean {
+
     private int attr;
     private String cableNum;
     private String cableSpec;
@@ -11,6 +12,8 @@ public class CableBean {
     private String qrCode;
     private long stCabinetId;
     private String starting;
+    private String substationName;
+    private String mcrName;
 
     public int getAttr() {
         return attr;
@@ -90,5 +93,21 @@ public class CableBean {
 
     public void setStarting(String starting) {
         this.starting = starting;
+    }
+
+    public String getSubstationName() {
+        return substationName;
+    }
+
+    public void setSubstationName(String substationName) {
+        this.substationName = substationName;
+    }
+
+    public String getMcrName() {
+        return mcrName;
+    }
+
+    public void setMcrName(String mcrName) {
+        this.mcrName = mcrName;
     }
 }

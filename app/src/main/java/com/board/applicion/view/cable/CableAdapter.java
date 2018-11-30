@@ -22,13 +22,9 @@ public class CableAdapter extends BaseExpandableListAdapter {
     private Context context;
     private int groupLayout, childLayout;
     private List<CableBean> data = new ArrayList<>();
-    private String subName;
-    private String roomName;
 
-    public CableAdapter(Context context, String subName, String roomName, int groupLayout, int childLayout) {
+    public CableAdapter(Context context, int groupLayout, int childLayout) {
         this.context = context;
-        this.subName = subName;
-        this.roomName = roomName;
         this.groupLayout = groupLayout;
         this.childLayout = childLayout;
     }
@@ -93,10 +89,11 @@ public class CableAdapter extends BaseExpandableListAdapter {
         } else {
             holder.mLine.setVisibility(View.VISIBLE);
         }
-        holder.cableName.setText(data.get(groupPosition).getCableNum());
         if (data.get(groupPosition).getId() == 0) {
             holder.idName.setText("");
+            holder.cableName.setText(data.get(groupPosition).getCableNum());
         } else {
+            holder.cableName.setText(data.get(groupPosition).getCableNum() + "~");
             holder.idName.setText(String.valueOf(data.get(groupPosition).getId()));
         }
         if (isExpanded) {
@@ -129,12 +126,12 @@ public class CableAdapter extends BaseExpandableListAdapter {
         } else {
             holder = (ChildViewHolder) convertView.getTag();
         }
-        holder.text1.setText(subName);
-        holder.text2.setText(roomName);
+        holder.text1.setText(data.get(groupPosition).getSubstationName());
+        holder.text2.setText(data.get(groupPosition).getMcrName());
         holder.text3.setText(data.get(groupPosition).getCableNum());
         holder.text4.setText(data.get(groupPosition).getStarting());
         holder.text5.setText(data.get(groupPosition).getEnding());
-        holder.text6.setText(data.get(groupPosition).getCableTypeName());
+        holder.text6.setText(data.get(groupPosition).getCableSpec());
         return convertView;
     }
 
