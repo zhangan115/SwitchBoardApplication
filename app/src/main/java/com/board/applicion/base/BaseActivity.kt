@@ -1,20 +1,25 @@
 package com.board.applicion.base
 
+import android.app.Dialog
+import android.content.DialogInterface
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.support.annotation.Nullable
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
+import android.text.TextUtils
 import android.view.View
 import android.widget.TextView
+import android.widget.Toast
+import com.afollestad.materialdialogs.MaterialDialog
 import com.board.applicion.R
-import com.library.widget.TextViewVertical
 
 
-abstract class BaseActivity : AppCompatActivity() {
+abstract class BaseActivity : AppCompatActivity(), DialogInterface.OnCancelListener {
 
     open val showToolbar = true
+    open var loadingDialog: MaterialDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,6 +29,47 @@ abstract class BaseActivity : AppCompatActivity() {
         initData()
         initView(savedInstanceState)
         initToolBar()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (loadingDialog != null && loadingDialog!!.isShowing) {
+            loadingDialog!!.dismiss()
+        }
+    }
+
+    open fun hideProgressDialog() {
+        if (loadingDialog != null) {
+            loadingDialog!!.dismiss()
+        }
+    }
+
+    open fun showProgressDialog(): Dialog {
+        return showProgressDialog("加载中...")
+    }
+
+    open fun showProgressDialog(message: String): MaterialDialog {
+        if (loadingDialog == null) {
+            loadingDialog = MaterialDialog.Builder(this)
+                    .content(message)
+                    .progress(true, 0)
+                    .cancelListener(this)
+                    .progressIndeterminateStyle(false).build()
+        } else {
+            loadingDialog!!.setContent(message)
+        }
+        loadingDialog!!.show()
+        return loadingDialog!!
+    }
+
+    open fun showToastMessage(message: String?) {
+        if (!TextUtils.isEmpty(message)) {
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onCancel(dialog: DialogInterface?) {
+
     }
 
     /**
@@ -105,15 +151,13 @@ abstract class BaseActivity : AppCompatActivity() {
     fun setDarkStatusIcon(bDark: Boolean) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             val decorView = window.decorView
-            if (decorView != null) {
-                var vis = decorView.systemUiVisibility
-                vis = if (bDark) {
-                    vis or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-                } else {
-                    vis and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
-                }
-                decorView.systemUiVisibility = vis
+            var vis = decorView.systemUiVisibility
+            vis = if (bDark) {
+                vis or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+            } else {
+                vis and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
             }
+            decorView.systemUiVisibility = vis
         }
     }
 

@@ -8,7 +8,25 @@ apply plugin: 'kotlin-kapt'
 
 apply plugin: 'io.objectbox'
 
+def static releaseTime() {
+    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
+}
+
 android {
+    signingConfigs {
+        debug {
+            keyAlias 'key0'
+            keyPassword '123456'
+            storeFile file('../inspection.jks')
+            storePassword '123456'
+        }
+        relealse {
+            keyAlias 'key0'
+            keyPassword '123456'
+            storeFile file('../inspection.jks')
+            storePassword '123456'
+        }
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.board.applicion"
@@ -23,7 +41,7 @@ android {
     }
     flavorDimensions "default"
     productFlavors {
-        inspection_app_default {
+        cable_app_default {
             applicationId "com.board.applicion"
             dimension "default"
             resValue "string", "app_name", "运维检修"
@@ -51,6 +69,11 @@ android {
     sourceSets {
         main {
             jniLibs.srcDirs = ['libs']
+        }
+    }
+    android.applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "运维检修_${variant.flavorName}_V${defaultConfig.versionName}_${releaseTime()}_${variant.buildType.name}.apk"
         }
     }
 }

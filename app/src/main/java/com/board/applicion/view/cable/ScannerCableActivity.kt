@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
 import android.widget.Toast
-import com.afollestad.materialdialogs.MaterialDialog
 import com.board.applicion.R
 import com.board.applicion.base.BaseActivity
 import com.board.applicion.mode.cable.CableApi
@@ -23,17 +22,18 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_cable_list.*
+import kotlinx.android.synthetic.main.layout_sarch_view.*
 import org.json.JSONObject
+import java.lang.ref.WeakReference
 
 class ScannerCableActivity : BaseActivity() {
 
-    private var scannerBr: CableListActivity.ScannerBr? = null
+    private var scannerBr: ScannerBr? = null
     private var supportRFID = true
     private var iso6C: ISO1800_6C? = null
     private var isReadRFID = true
     private var adapter: CableAdapter? = null
     private val dataList = ArrayList<CableBean>()
-    private var loadingDialog: MaterialDialog? = null
 
     companion object {
         var huManager: UhfManager? = null
@@ -41,7 +41,7 @@ class ScannerCableActivity : BaseActivity() {
 
     override fun initView(savedInstanceState: Bundle?) {
         readRFIDBtn.setOnClickListener { _ ->
-            if (supportRFID && isReadRFID && dataList.isNotEmpty()) {
+            if (supportRFID && isReadRFID) {
                 isReadRFID = false
                 val observable = Observable.create<String> {
                     try {
@@ -89,7 +89,17 @@ class ScannerCableActivity : BaseActivity() {
                             isReadRFID = true
                         })
             } else {
-                scanner("100003")
+                showToastMessage("本机不支持扫码！")
+            }
+        }
+        searchBtn.setOnClickListener {
+            val searchContent = searchEt.text
+            if (!TextUtils.isEmpty(searchContent)) {
+                if (searchContent.length < 6) {
+                    showToastMessage("请输入6位电缆ID")
+                    return@setOnClickListener
+                }
+                scanner(searchContent.toString())
             }
         }
     }
@@ -113,10 +123,7 @@ class ScannerCableActivity : BaseActivity() {
     }
 
     private fun searchCable(id: String) {
-        if (loadingDialog == null) {
-            loadingDialog = MaterialDialog.Builder(this).progressIndeterminateStyle(true).build()
-        }
-        loadingDialog!!.show()
+        showProgressDialog("查找中...")
         val cableHttp = CableHttpManager<CableBean>(lifecycle)
         cableHttp.requestData(cableHttp.retrofit?.create(CableApi::class.java)?.getCable(id), {
             if (it != null) {
@@ -133,15 +140,16 @@ class ScannerCableActivity : BaseActivity() {
             } else {
                 Toast.makeText(this, "没有找到数据！", Toast.LENGTH_SHORT).show()
             }
-            loadingDialog!!.dismiss()
+            hideProgressDialog()
         }, {
             Toast.makeText(this, it, Toast.LENGTH_SHORT).show()
-            loadingDialog!!.dismiss()
+            hideProgressDialog()
         })
     }
 
     override fun initData() {
-        scannerBr = CableListActivity.ScannerBr()
+        scannerBr = ScannerBr()
+        scannerBr!!.activity = WeakReference(this)
         huManager = UhfAdapter.getUhfManager(this)
         if (huManager != null) {
             val canOpen = huManager!!.open()
@@ -182,10 +190,12 @@ class ScannerCableActivity : BaseActivity() {
 
     inner class ScannerBr : BroadcastReceiver() {
 
+        var activity: WeakReference<ScannerCableActivity>? = null
+
         override fun onReceive(context: Context?, intent: Intent?) {
             val result = intent?.getStringExtra("BARCODE")
             if (!TextUtils.isEmpty(result)) {
-                scanner(JSONObject(result).getString("CABLE_ID"))
+                activity?.get()?.scanner(JSONObject(result).getString("CABLE_ID"))
             }
         }
     }

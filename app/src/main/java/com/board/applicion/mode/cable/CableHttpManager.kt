@@ -4,6 +4,7 @@ import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.OnLifecycleEvent
 import android.support.annotation.Nullable
+import android.text.TextUtils
 import com.board.applicion.app.App
 import com.board.applicion.mode.SPConstant.SP_BASE_URL
 import com.board.applicion.mode.SPConstant.SP_NAME
@@ -35,24 +36,26 @@ class CableHttpManager<T>(val lifecycle: Lifecycle) : LifecycleObserver {
                     .readTimeout(10, TimeUnit.SECONDS)
                     .writeTimeout(20, TimeUnit.SECONDS)
                     .build()
-            var baseUrl = SPHelper.readString(App.instance, SP_NAME, SP_BASE_URL, "http://118.24.162.247:8080/")
-            if (baseUrl.startsWith("http://") && baseUrl.endsWith("/")) {
-
-            } else {
-                baseUrl = "http://118.24.162.247:8080/"
+            var baseUrl = SPHelper.readString(App.instance, SP_NAME, SP_BASE_URL, "118.24.162.247:8080")
+            if (!TextUtils.isEmpty(baseUrl)) {
+                if (!baseUrl!!.startsWith("http://")) {
+                    baseUrl = "http://$baseUrl"
+                }
+                if (!baseUrl.endsWith("/")) {
+                    baseUrl = "$baseUrl/"
+                }
+                if (okHttpClient != null)
+                    retrofit = Retrofit.Builder()
+                            .baseUrl(baseUrl)
+                            .client(okHttpClient!!)
+                            .addConverterFactory(ProtoConverterFactory.create())
+                            .addConverterFactory(ScalarsConverterFactory.create())
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .build()
             }
-            if (okHttpClient != null)
-                retrofit = Retrofit.Builder()
-                        .baseUrl(baseUrl)
-                        .client(okHttpClient!!)
-                        .addConverterFactory(ProtoConverterFactory.create())
-                        .addConverterFactory(ScalarsConverterFactory.create())
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build()
         } catch (e: Exception) {
 
         }
-
     }
 
     @Nullable

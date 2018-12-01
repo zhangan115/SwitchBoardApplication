@@ -22,4 +22,5 @@
     <string name="str_choose_photo">相册</string>
     <string name="string_rate">"当前：%1$s"</string>
     <string name="string_flow">"合计：%1$s"</string>
+    <string name="check_ip_setting">请检查你的IP配置!</string>
 </resources>

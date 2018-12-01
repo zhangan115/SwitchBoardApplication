@@ -5,11 +5,13 @@ import android.os.Bundle
 import com.board.applicion.R
 import com.board.applicion.base.BaseFragment
 import com.board.applicion.view.deploy.cabinet.CabinetManagerActivity
+import com.board.applicion.view.deploy.cable.CableIPSettingActivity
 import com.board.applicion.view.deploy.mainControlRoom.MainControlRoomManagerActivity
 import com.board.applicion.view.deploy.substation.SubstationManagerActivity
 import com.board.applicion.view.deploy.switchBoard.SwitchBoardManagerActivity
 import com.board.applicion.view.deploy.template.TemplateSettingActivity
 import com.board.applicion.view.deploy.user.UserManagerActivity
+import com.videogo.openapi.EZOpenSDK
 import kotlinx.android.synthetic.main.fragment_deploy.*
 
 class DeployFragment : BaseFragment() {
@@ -48,7 +50,13 @@ class DeployFragment : BaseFragment() {
             startActivity(Intent(activity, TemplateSettingActivity::class.java))
         }
         switchBoardManager.setOnClickListener {
-            startActivity(Intent(activity,SwitchBoardManagerActivity::class.java))
+            startActivity(Intent(activity, SwitchBoardManagerActivity::class.java))
+        }
+        cableIPManager.setOnClickListener {
+            startActivity(Intent(activity, CableIPSettingActivity::class.java))
+        }
+        videoManager.setOnClickListener {
+            EZOpenSDK.openLoginPage()
         }
     }
 }

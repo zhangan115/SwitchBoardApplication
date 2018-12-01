@@ -93,7 +93,7 @@ public class CableAdapter extends BaseExpandableListAdapter {
             holder.idName.setText("");
             holder.cableName.setText(data.get(groupPosition).getCableNum());
         } else {
-            holder.cableName.setText(data.get(groupPosition).getCableNum() + "~");
+            holder.cableName.setText(String.format("%s~", data.get(groupPosition).getCableNum()));
             holder.idName.setText(String.valueOf(data.get(groupPosition).getId()));
         }
         if (isExpanded) {

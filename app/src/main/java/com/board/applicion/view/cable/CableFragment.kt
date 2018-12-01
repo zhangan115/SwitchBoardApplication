@@ -1,5 +1,6 @@
 package com.board.applicion.view.cable
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
@@ -13,8 +14,8 @@ import com.board.applicion.mode.SPConstant.SP_NAME
 import com.board.applicion.mode.cable.CableApi
 import com.board.applicion.mode.cable.CableHttpManager
 import com.board.applicion.mode.cable.SubstationBean
+import com.board.applicion.view.deploy.cable.CableIPSettingActivity
 import com.library.utils.SPHelper
-import kotlinx.android.synthetic.main.activity_splash.*
 import kotlinx.android.synthetic.main.fragment_cable.*
 
 class CableFragment : BaseFragment() {
@@ -48,8 +49,18 @@ class CableFragment : BaseFragment() {
         }
         expandableListView.setAdapter(adapter)
         if (needSetBaseUrl()) {
-            showSetBaseUrlDialog()
+            MaterialDialog.Builder(activity!!).content("IP没有配置").positiveText("确定").onPositive { dialog, _ ->
+                dialog.dismiss()
+                startActivityForResult(Intent(activity!!, CableIPSettingActivity::class.java), 200)
+            }.build().show()
         } else {
+            requestData()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 200 && resultCode == Activity.RESULT_OK) {
             requestData()
         }
     }
@@ -72,37 +83,13 @@ class CableFragment : BaseFragment() {
                 noDataTv.visibility = View.VISIBLE
             }
         }, {
-            noDataTv.text = "请检查你的IP配置!"
+            noDataTv.text = findString(R.string.check_ip_setting)
             noDataTv.visibility = View.VISIBLE
             Toast.makeText(activity, it, Toast.LENGTH_SHORT).show()
         })
     }
 
-
-    private fun showSetBaseUrlDialog() {
-        if (TextUtils.isEmpty(inputBaseUrl)) {
-            inputBaseUrl = "118.24.162.247:8080"
-        }
-        MaterialDialog.Builder(activity!!)
-                .input("请输入请求IP", inputBaseUrl, false) { dialog, input -> inputBaseUrl = input?.toString() ?: "" }
-                .negativeText("取消")
-                .positiveText("确定")
-                .onPositive { dialog, _ ->
-                    if (dialog.inputEditText != null) {
-                        inputBaseUrl = dialog.inputEditText!!.text.toString()
-                    }
-                    if (checkBaseUrl()) {
-                        SPHelper.write(activity, SP_NAME, SP_BASE_URL, inputBaseUrl)
-                        requestData()
-                    }
-                    dialog.dismiss()
-                }.build().show()
-    }
-
     override fun initView() {
-        settingIv.setOnClickListener {
-            showSetBaseUrlDialog()
-        }
         scannerIv.setOnClickListener {
             startActivity(Intent(activity, ScannerCableActivity::class.java))
         }
@@ -113,17 +100,4 @@ class CableFragment : BaseFragment() {
         return TextUtils.isEmpty(inputBaseUrl)
     }
 
-    private fun checkBaseUrl(): Boolean {
-        if (TextUtils.isEmpty(inputBaseUrl)) return false
-        if (!inputBaseUrl!!.startsWith("http://")) {
-            inputBaseUrl = "http://$inputBaseUrl"
-        }
-        if (!inputBaseUrl!!.endsWith("/")) {
-            inputBaseUrl = "$inputBaseUrl/"
-        }
-        if (inputBaseUrl!!.startsWith("http://") && inputBaseUrl!!.endsWith("/")) {
-            return true
-        }
-        return false
-    }
 }

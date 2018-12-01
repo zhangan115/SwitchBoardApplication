@@ -52,7 +52,11 @@ class VideoFragment : BaseFragment() {
     override fun initData() {
         //没有登录需要登录萤石平台
         if (!EZOpenSDK.isLogin()) {
-            EZOpenSDK.openLoginPage()
+            showInfoTv.visibility = View.VISIBLE
+            showInfoTv.text = "点击登陆萤石账号"
+            showInfoTv.setOnClickListener {
+                EZOpenSDK.openLoginPage()
+            }
         } else {
             requestEZDevice()
         }
@@ -93,6 +97,7 @@ class VideoFragment : BaseFragment() {
         if (deviceList.isEmpty()) {
             showInfoTv.visibility = View.VISIBLE
             showInfoTv.text = "当前没有数据，请去萤石平台添加设备！"
+            showInfoTv.setOnClickListener { }
         } else {
             showInfoTv.visibility = View.GONE
         }

@@ -20,11 +20,12 @@ class SplashActivity : BaseActivity() {
     private var disposable: Disposable? = null
 
     override fun initView(savedInstanceState: Bundle?) {
+        setDarkStatusIcon(true)
     }
 
     override fun initData() {
         disposable = Observable.just("showLogin")
-                .delay(3, TimeUnit.SECONDS)
+                .delay(2, TimeUnit.SECONDS)
                 .subscribe {
                     val json = SPHelper.readString(this, SP_NAME, SP_CURRENT_USER)
                     if (TextUtils.isEmpty(json)) {
