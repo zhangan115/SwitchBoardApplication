@@ -60,7 +60,7 @@ class ExaminationFragment : BaseFragment() {
                 expandableListView.expandGroup(i)
             }
         }
-        userLayout.setOnClickListener {
+        exitUser.setOnClickListener {
             MaterialDialog.Builder(activity!!)
                     .content("是否退出当前用户?")
                     .negativeText("取消")

@@ -122,7 +122,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:drawableTop="@drawable/cabinet_max"
+                        android:drawableTop="@drawable/ip"
                         android:drawablePadding="15dp"
                         android:gravity="center"
                         android:text="IP设置"
@@ -148,7 +148,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:drawableTop="@drawable/cabinet_max"
+                        android:drawableTop="@drawable/monitor"
                         android:drawablePadding="15dp"
                         android:gravity="center"
                         android:text="监控管理"
