@@ -3,6 +3,7 @@ package com.board.applicion.view.examination
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import com.afollestad.materialdialogs.MaterialDialog
 import com.board.applicion.R
 import com.board.applicion.app.App
@@ -38,7 +39,6 @@ class ExaminationFragment : BaseFragment() {
 
     override fun initData() {
         subStore = DatabaseStore(lifecycle, Substation::class.java)
-
     }
 
     override fun initView() {
@@ -56,13 +56,18 @@ class ExaminationFragment : BaseFragment() {
             dataList.clear()
             dataList.addAll(it)
             adapter.notifyDataSetChanged()
-            for (i in 0 until expandableListView.count) {
-                expandableListView.expandGroup(i)
+            if (it.isEmpty()) {
+                noDataTv.visibility = View.VISIBLE
+            } else {
+                noDataTv.visibility = View.GONE
+                for (i in 0 until expandableListView.count) {
+                    expandableListView.expandGroup(i)
+                }
             }
         }
         exitUser.setOnClickListener {
             MaterialDialog.Builder(activity!!)
-                    .content("是否退出当前用户?")
+                    .content("退出登录?")
                     .negativeText("取消")
                     .positiveText("确定")
                     .onPositive { dialog, _ ->

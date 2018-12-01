@@ -34,21 +34,41 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.library.widget.PinnedHeaderExpandableListView
-            android:id="@+id/expandableListView"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:cacheColorHint="@null"
-            android:childDivider="@null"
-            android:childIndicatorLeft="0dp"
-            android:clipToPadding="false"
-            android:divider="@null"
-            android:dividerHeight="0dp"
-            android:groupIndicator="@null"
-            android:listSelector="@color/transparent"
-            android:paddingTop="6dp"
-            android:scrollbarAlwaysDrawHorizontalTrack="false"
-            android:scrollbars="none" />
+            android:layout_height="match_parent">
+
+            <com.library.widget.PinnedHeaderExpandableListView
+                android:id="@+id/expandableListView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:cacheColorHint="@null"
+                android:childDivider="@null"
+                android:childIndicatorLeft="0dp"
+                android:clipToPadding="false"
+                android:divider="@null"
+                android:dividerHeight="0dp"
+                android:groupIndicator="@null"
+                android:listSelector="@color/transparent"
+                android:paddingTop="6dp"
+                android:scrollbarAlwaysDrawHorizontalTrack="false"
+                android:scrollbars="none" />
+
+            <TextView
+                android:id="@+id/noDataTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:drawableTop="@drawable/no_data"
+                android:drawablePadding="10dp"
+                android:gravity="center"
+                android:text="暂时没有数据"
+                android:textColor="@color/colorText666"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+
 
         <LinearLayout
             android:id="@+id/filterLayout"

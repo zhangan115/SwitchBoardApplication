@@ -2,6 +2,7 @@ package com.board.applicion.view.deploy
 
 import android.content.Intent
 import android.os.Bundle
+import com.afollestad.materialdialogs.MaterialDialog
 import com.board.applicion.R
 import com.board.applicion.base.BaseFragment
 import com.board.applicion.view.deploy.cabinet.CabinetManagerActivity
@@ -56,7 +57,18 @@ class DeployFragment : BaseFragment() {
             startActivity(Intent(activity, CableIPSettingActivity::class.java))
         }
         videoManager.setOnClickListener {
-            EZOpenSDK.openLoginPage()
+            if (EZOpenSDK.isLogin()) {
+                MaterialDialog.Builder(activity!!).content("当前已登录，是否要切换账号!")
+                        .negativeText("取消")
+                        .positiveText("确定")
+                        .onPositive { dialog, _ ->
+                    dialog.dismiss()
+                    EZOpenSDK.logout()
+                    EZOpenSDK.openLoginPage()
+                }.build().show()
+            } else {
+                EZOpenSDK.openLoginPage()
+            }
         }
     }
 }

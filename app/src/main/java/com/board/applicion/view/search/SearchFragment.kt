@@ -63,7 +63,7 @@ class SearchFragment : BaseFragment() {
             val intent = Intent(activity, CabinetListActivity::class.java)
             intent.putExtra("title", it.name)
             intent.putExtra("id", it.id)
-            intent.putExtra("showHistory",true)
+            intent.putExtra("showHistory", true)
             startActivity(intent)
         }
         expandableListView.setAdapter(adapter)
@@ -71,8 +71,13 @@ class SearchFragment : BaseFragment() {
             dataList.clear()
             dataList.addAll(it)
             adapter.notifyDataSetChanged()
-            for (i in 0 until expandableListView.count) {
-                expandableListView.expandGroup(i)
+            if (it.isEmpty()) {
+                noDataTv.visibility = View.VISIBLE
+            } else {
+                noDataTv.visibility = View.GONE
+                for (i in 0 until expandableListView.count) {
+                    expandableListView.expandGroup(i)
+                }
             }
         }
         resetLayout.setOnClickListener {
@@ -81,7 +86,7 @@ class SearchFragment : BaseFragment() {
         }
     }
 
-    private fun filterUIUpdate(){
+    private fun filterUIUpdate() {
 
     }
 }
