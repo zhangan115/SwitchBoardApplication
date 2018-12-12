@@ -16,7 +16,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
-import com.afollestad.materialdialogs.DialogAction
 import com.afollestad.materialdialogs.MaterialDialog
 import com.board.applicion.R
 import com.board.applicion.app.App
@@ -24,11 +23,14 @@ import com.board.applicion.base.BaseActivity
 import com.board.applicion.mode.DatabaseStore
 import com.board.applicion.mode.databases.*
 import com.bumptech.glide.Glide
+import com.example.xty.ndkdemo.java2c
 import com.soundcloud.android.crop.Crop
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_switch_board.*
 import java.io.File
-import java.util.concurrent.TimeUnit
 
 class SwitchBoardActivity : BaseActivity() {
 
@@ -43,6 +45,7 @@ class SwitchBoardActivity : BaseActivity() {
     private var photoPath: String? = null//图片地址
     private var isCheck = false//是否检查
     private var isChecking = false//正在检查
+    private var checkDis: Disposable? = null
 
     private lateinit var cabinetSbPosCkRstStore: DatabaseStore<CabinetSbPosCkRst>//核查记录保存
     private lateinit var sbPosCjRstDetailStore: DatabaseStore<SbPosCjRstDetail>//核查结果保存
@@ -215,48 +218,79 @@ class SwitchBoardActivity : BaseActivity() {
      * 检查结果
      */
     private fun checkPhoto() {
-        val dis = Observable.just("Test")
-                .delay(3, TimeUnit.SECONDS)
-                .subscribe {
-                    isChecking = false
-                    isCheck = true
-                    if (cabinet != null) {
-                        sbCheckData.clear()
-                        for (i in 1..cabinet!!.rowNum) {
-                            for (j in 1..cabinet!!.colNum) {
-                                val sb = getCurrentData(i, j, cabinetTemplateData)
-                                if (sb != null) {
-                                    sbCheckData.add(SbPosCjRstDetail(0, sb.subId, sb.mcrId, sb.cabinetId
-                                            , sb.id, System.currentTimeMillis(), sb.name, sb.desc, sb.row, sb.col
-                                            , 2, App.instance.getCurrentUser().name
-                                            , System.currentTimeMillis(), 1))// 读取出数据
+        val observable = Observable.create<String> {
+            try {
+                val j2c = java2c()
+                it.onNext(j2c.getResult(photoPath))
+            } catch (e: Exception) {
+                it.onError(e.fillInStackTrace())
+                it.onComplete()
+            } finally {
+                it.onComplete()
+            }
+        }
+        checkDis = observable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    if (it.isNotEmpty()) {
+                        Log.d("za","===>$it")
+                        val rowCount = cabinet!!.rowNum.toString().length
+                        val colCount = cabinet!!.colNum.toString().length
+                        val result: String
+                        if (!it.startsWith(cabinet!!.rowNum.toString()+cabinet!!.colNum.toString())){
+                            return@subscribe
+                        }
+                        result = it.substring(rowCount+colCount)
+                        if (result.length != cabinet!!.rowNum*cabinet!!.colNum){
+                            return@subscribe
+                        }
+                        isChecking = false
+                        isCheck = true
+                        var currentPosition = 0
+                        if (cabinet != null) {
+                            sbCheckData.clear()
+                            for (i in 1..cabinet!!.rowNum) {
+                                for (j in 1..cabinet!!.colNum) {
+                                    val sb = getCurrentData(i, j, cabinetTemplateData)
+                                    if (sb != null) {
+                                        sbCheckData.add(SbPosCjRstDetail(0, sb.subId, sb.mcrId, sb.cabinetId
+                                                , sb.id, System.currentTimeMillis(), sb.name, sb.desc, sb.row, sb.col
+                                                , result[currentPosition].toInt(), App.instance.getCurrentUser().name
+                                                , System.currentTimeMillis(), 1))// 读取出数据
+                                    }
+                                    currentPosition++
                                 }
                             }
-                        }
-                        cabinetSbPosCkRst = CabinetSbPosCkRst(0, cabinet!!.subId, cabinet!!.mcrId, cabinet!!.id
-                                , System.currentTimeMillis(), photoPath, "", App.instance.getCurrentUser().name
-                                , System.currentTimeMillis(), 1)//读取出本次核查记录(临时保存 status 为1 正式保存后为0)
-                        for (sb in sbCheckData) {
-                            sb.cabinetSbPosCkRstToOne.target = cabinetSbPosCkRst
-                        }
-                        cabinetSbPosCkRst!!.substationToOne.target = cabinet!!.substationToOne.target
-                        cabinetSbPosCkRst!!.mainControlRoomToOne.target = cabinet!!.mainControlRoomToOne.target
-                        cabinetSbPosCkRst!!.cabinetToOne.target = cabinet
-                        cabinetSbPosCkRst!!.sbPosCjRstDetailToMany.addAll(sbCheckData)
-
-                        val rstId = cabinetSbPosCkRstStore.getBox().put(cabinetSbPosCkRst!!)
-                        cabinetSbPosCkRst!!.id = rstId
-                        sbPosCjRstDetailStore.getBox().put(sbCheckData)
-                        runOnUiThread {
-                            if (sbCheckData.isNotEmpty()) {
-                                showPhoto.visibility = View.GONE
-                                showResultLayout.visibility = View.VISIBLE
-                                sbRecycleView.adapter?.notifyDataSetChanged()
+                            cabinetSbPosCkRst = CabinetSbPosCkRst(0, cabinet!!.subId, cabinet!!.mcrId, cabinet!!.id
+                                    , System.currentTimeMillis(), photoPath, "", App.instance.getCurrentUser().name
+                                    , System.currentTimeMillis(), 1)//读取出本次核查记录(临时保存 status 为1 正式保存后为0)
+                            for (sb in sbCheckData) {
+                                sb.cabinetSbPosCkRstToOne.target = cabinetSbPosCkRst
                             }
-                            updateState()
+                            cabinetSbPosCkRst!!.substationToOne.target = cabinet!!.substationToOne.target
+                            cabinetSbPosCkRst!!.mainControlRoomToOne.target = cabinet!!.mainControlRoomToOne.target
+                            cabinetSbPosCkRst!!.cabinetToOne.target = cabinet
+                            cabinetSbPosCkRst!!.sbPosCjRstDetailToMany.addAll(sbCheckData)
+
+                            val rstId = cabinetSbPosCkRstStore.getBox().put(cabinetSbPosCkRst!!)
+                            cabinetSbPosCkRst!!.id = rstId
+                            sbPosCjRstDetailStore.getBox().put(sbCheckData)
+                            runOnUiThread {
+                                if (sbCheckData.isNotEmpty()) {
+                                    showPhoto.visibility = View.GONE
+                                    showResultLayout.visibility = View.VISIBLE
+                                    sbRecycleView.adapter?.notifyDataSetChanged()
+                                }
+                                updateState()
+                            }
                         }
                     }
-                }
+
+                }, {
+
+                }, {
+
+                })
     }
 
     private fun updateState() {
@@ -302,7 +336,7 @@ class SwitchBoardActivity : BaseActivity() {
 
     private fun beginCrop(source: Uri) {
         val destination = Uri.fromFile(File(this.cacheDir, "${System.currentTimeMillis()}.jpg"))
-        Crop.of(source, destination).asSquare().start(this)
+        Crop.of(source, destination).start(this)
     }
 
     private fun handleCrop(resultCode: Int, result: Intent) {
