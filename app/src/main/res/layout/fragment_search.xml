@@ -254,7 +254,7 @@
                                     android:textSize="16sp" />
 
                                 <TextView
-                                    android:id="@+id/startTime"
+                                    android:id="@+id/startTimeTv"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginRight="15dp"
@@ -288,7 +288,7 @@
                                     android:textSize="16sp" />
 
                                 <TextView
-                                    android:id="@+id/endTime"
+                                    android:id="@+id/endTimeTv"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginRight="15dp"

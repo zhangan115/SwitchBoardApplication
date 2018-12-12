@@ -1,6 +1,6 @@
 package com.board.applicion.view.search
 
-import android.animation.ObjectAnimator
+import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -9,8 +9,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -22,7 +20,9 @@ import com.board.applicion.mode.User_
 import com.board.applicion.mode.databases.*
 import com.board.applicion.view.examination.SubListAdapter
 import com.board.applicion.view.examination.room.CabinetListActivity
+import com.library.utils.DataUtil
 import kotlinx.android.synthetic.main.fragment_search.*
+import java.util.*
 
 class SearchFragment : BaseFragment(), View.OnClickListener {
 
@@ -166,14 +166,43 @@ class SearchFragment : BaseFragment(), View.OnClickListener {
         chooseCabinetLayout.setOnClickListener(this)
         chooseUserLayout.setOnClickListener(this)
         chooseStartLayout.setOnClickListener {
-
+            val calendar = Calendar.getInstance()
+            val datePickDialog = DatePickerDialog(activity!!, DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+                val currentCalendar = Calendar.getInstance()
+                currentCalendar.set(Calendar.YEAR, year)
+                currentCalendar.set(Calendar.MONTH, month)
+                currentCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                currentCalendar.set(Calendar.HOUR_OF_DAY, 0)
+                currentCalendar.set(Calendar.MINUTE, 0)
+                currentCalendar.set(Calendar.SECOND, 0)
+                currentCalendar.set(Calendar.MILLISECOND, 0)
+                startTime = currentCalendar.timeInMillis
+                startTimeTv.text = DataUtil.timeFormat(currentCalendar.timeInMillis, "yyyy-MM-dd")
+                startTime = currentCalendar.timeInMillis
+            }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
+            datePickDialog.show()
+        }
+        chooseEndLayout.setOnClickListener {
+            val calendar = Calendar.getInstance()
+            val datePickDialog = DatePickerDialog(activity!!, DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+                val currentCalendar = Calendar.getInstance()
+                currentCalendar.set(Calendar.YEAR, year)
+                currentCalendar.set(Calendar.MONTH, month)
+                currentCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                currentCalendar.set(Calendar.HOUR_OF_DAY, 0)
+                currentCalendar.set(Calendar.MINUTE, 0)
+                currentCalendar.set(Calendar.SECOND, 0)
+                currentCalendar.set(Calendar.MILLISECOND, 0)
+                currentCalendar.add(Calendar.DAY_OF_MONTH, 1) // 一天后的时间
+                currentCalendar.add(Calendar.MILLISECOND, -1)
+                endTimeTv.text = DataUtil.timeFormat(currentCalendar.timeInMillis, "yyyy-MM-dd")
+                endTime = currentCalendar.timeInMillis
+            }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
+            datePickDialog.show()
         }
         recycleView.layoutManager = GridLayoutManager(activity, 1)
         conditionAdapter = Adapter(searchResultList!!, activity!!)
         recycleView.adapter = conditionAdapter
-        chooseEndLayout.setOnClickListener {
-
-        }
         viewWidth = activity?.resources?.displayMetrics?.widthPixels
         searchLayout.layoutParams = LinearLayout.LayoutParams(viewWidth!!, LinearLayout.LayoutParams.WRAP_CONTENT)
         resultLayout.layoutParams = LinearLayout.LayoutParams(viewWidth!!, LinearLayout.LayoutParams.WRAP_CONTENT)
