@@ -1,5 +1,7 @@
 package com.board.applicion.view.search
 
+import android.animation.AnimatorSet
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -7,6 +9,10 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationSet
+import android.view.animation.AnimationUtils
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -17,7 +23,6 @@ import com.board.applicion.mode.User
 import com.board.applicion.mode.databases.Cabinet
 import com.board.applicion.mode.databases.MainControlRoom
 import com.board.applicion.mode.databases.Substation
-import com.board.applicion.view.deploy.user.UserAddActivity
 import com.board.applicion.view.examination.SubListAdapter
 import com.board.applicion.view.examination.room.CabinetListActivity
 import kotlinx.android.synthetic.main.fragment_search.*
@@ -38,26 +43,65 @@ class SearchFragment : BaseFragment(), View.OnClickListener {
             R.id.chooseUserLayout -> {
 
             }
-            R.id.chooseStartLayout -> {
-
-            }
-            R.id.chooseEndLayout -> {
-
-            }
-
         }
+
     }
 
-    var searchResultList: ArrayList<SearchResult>? = null
-    var searchCondition: SearchCondition? = null
+    private var searchResultList: ArrayList<SearchResult>? = null
+    private var searchCondition: SearchCondition? = null
+    private val animTime = 1500L
 
     private fun showSearchResult(searchCondition: SearchCondition) {
         this.searchCondition = searchCondition
         searchResultList?.clear()
         searchResultList?.addAll(searchCondition.resultList)
         recycleView.adapter?.notifyDataSetChanged()
+        this.showOpenAnim()
     }
 
+    private fun showOpenAnim() {
+        val tranAnim = ObjectAnimator.ofFloat(searchLayout,"translationX",0F,-viewWidth!!.toFloat())
+        val resultAnim = ObjectAnimator.ofFloat(resultLayout,"translationX",viewWidth!!.toFloat(),0F)
+        searchLayout.visibility = View.GONE
+        resultLayout.visibility = View.VISIBLE
+    }
+
+    private fun showCloseAnim() {
+        val closeAnim = AnimationUtils.loadAnimation(activity, R.anim.close_search)
+        closeAnim.duration = animTime
+        closeAnim.fillAfter = true
+        closeAnim.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationRepeat(animation: Animation?) {
+
+            }
+
+            override fun onAnimationEnd(animation: Animation?) {
+
+            }
+
+            override fun onAnimationStart(animation: Animation?) {
+                searchLayout.visibility = View.VISIBLE
+            }
+
+        })
+        searchLayout.startAnimation(closeAnim)
+        val closeResultAnim = AnimationUtils.loadAnimation(activity, R.anim.close_result)
+        closeResultAnim.duration = animTime
+        closeResultAnim.fillAfter = true
+        closeResultAnim.setAnimationListener(object : Animation.AnimationListener {
+            override fun onAnimationRepeat(animation: Animation?) {
+
+            }
+
+            override fun onAnimationEnd(animation: Animation?) {
+                resultLayout.visibility = View.GONE
+            }
+
+            override fun onAnimationStart(animation: Animation?) {
+            }
+        })
+        resultLayout.startAnimation(closeResultAnim)
+    }
 
     private var isFilter = false
     //search data
@@ -67,7 +111,7 @@ class SearchFragment : BaseFragment(), View.OnClickListener {
     private var checkUser: User? = null
     private var startTime: Long = -1
     private var endTime: Long = -1
-
+    private var viewWidth: Int? = 0
     private lateinit var subStore: DatabaseStore<Substation>
     lateinit var adapter: SubListAdapter
     private val dataList = ArrayList<Substation>()
@@ -104,8 +148,16 @@ class SearchFragment : BaseFragment(), View.OnClickListener {
         chooseRoomLayout.setOnClickListener(this)
         chooseCabinetLayout.setOnClickListener(this)
         chooseUserLayout.setOnClickListener(this)
-        chooseStartLayout.setOnClickListener(this)
-        chooseEndLayout.setOnClickListener(this)
+        chooseStartLayout.setOnClickListener {
+
+        }
+        chooseEndLayout.setOnClickListener {
+
+        }
+        viewWidth = activity?.resources?.displayMetrics?.widthPixels
+//        filterLayout.layoutParams = FrameLayout.LayoutParams(viewWidth!!*2,LinearLayout.LayoutParams.WRAP_CONTENT)
+        searchLayout.layoutParams = LinearLayout.LayoutParams(viewWidth!!,LinearLayout.LayoutParams.WRAP_CONTENT)
+        resultLayout.layoutParams = LinearLayout.LayoutParams(viewWidth!!, LinearLayout.LayoutParams.WRAP_CONTENT)
         recycleView.adapter = Adapter(searchResultList!!, activity!!)
         adapter = SubListAdapter(activity, R.layout.item_sub, R.layout.item_room)
         adapter.setData(dataList)
@@ -132,6 +184,9 @@ class SearchFragment : BaseFragment(), View.OnClickListener {
         }
         resetBtn.setOnClickListener {
             filterUIUpdate()
+        }
+        backSearchBtn.setOnClickListener {
+            showCloseAnim()
         }
     }
 
