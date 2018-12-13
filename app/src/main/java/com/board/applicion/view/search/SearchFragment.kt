@@ -26,10 +26,10 @@ import java.util.*
 
 class SearchFragment : BaseFragment(), View.OnClickListener {
 
-    var subList: ArrayList<Substation> = ArrayList()
-    var roomList: ArrayList<MainControlRoom> = ArrayList()
-    var cabinetList: ArrayList<Cabinet> = ArrayList()
-    var userList: ArrayList<User> = ArrayList()
+    private var subList: ArrayList<Substation> = ArrayList()
+    private var roomList: ArrayList<MainControlRoom> = ArrayList()
+    private var cabinetList: ArrayList<Cabinet> = ArrayList()
+    private var userList: ArrayList<User> = ArrayList()
 
     private var isFilter = false
     //search data
@@ -236,7 +236,20 @@ class SearchFragment : BaseFragment(), View.OnClickListener {
             cabinetList.clear()
             mainRoom = null
             cabinet = null
+            checkUser = null
+            startTime = 0L
+            endTime = 0L
             filterUIUpdate()
+        }
+        searchBtn.setOnClickListener {
+            val intent = Intent(activity, CabinetHistoryActivity::class.java)
+            intent.putExtra("subId", substation?.id)
+            intent.putExtra("roomId", mainRoom?.id)
+            intent.putExtra("cabinetId", cabinet?.id)
+            intent.putExtra("userId", checkUser?.name)
+            intent.putExtra("startTime", startTime)
+            intent.putExtra("endTime", endTime)
+            startActivity(intent)
         }
         backSearchBtn.setOnClickListener {
             showCloseAnim()
@@ -263,6 +276,12 @@ class SearchFragment : BaseFragment(), View.OnClickListener {
             userName.text = ""
         } else {
             userName.text = checkUser!!.realName
+        }
+        if (startTime == 0L) {
+            startTimeTv.text = ""
+        }
+        if (endTime == 0L) {
+            endTimeTv.text = ""
         }
     }
 

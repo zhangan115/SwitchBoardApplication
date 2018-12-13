@@ -15,6 +15,7 @@ import com.board.applicion.base.BaseActivity
 import com.board.applicion.mode.DatabaseStore
 import com.board.applicion.mode.databases.Cabinet
 import com.board.applicion.mode.databases.Cabinet_
+import com.board.applicion.view.search.CabinetHistoryActivity
 import kotlinx.android.synthetic.main.activity_cabinet_list.*
 
 class CabinetListActivity : BaseActivity() {
@@ -29,8 +30,8 @@ class CabinetListActivity : BaseActivity() {
         headerView.setOnClickListener {
             //to search
         }
-        isShowHistory = intent.getBooleanExtra("showHistory",false)
-        recycleView.adapter = Adapter(dataList, isShowHistory,this)
+        isShowHistory = intent.getBooleanExtra("showHistory", false)
+        recycleView.adapter = Adapter(dataList, isShowHistory, this)
     }
 
     override fun initData() {
@@ -57,7 +58,7 @@ class CabinetListActivity : BaseActivity() {
     }
 
 
-    private class Adapter(private val dataList: ArrayList<Cabinet>, private val  isShowHistory:Boolean,private val content: Context)
+    private class Adapter(private val dataList: ArrayList<Cabinet>, private val isShowHistory: Boolean, private val content: Context)
         : RecyclerView.Adapter<ViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -74,12 +75,14 @@ class CabinetListActivity : BaseActivity() {
             holder.name.text = dataList[position].name
             holder.itemView.setOnClickListener {
                 if (content is Activity) {
-                    if (isShowHistory){
-
-                    }else{
-                        val intent = Intent(content,SwitchBoardActivity::class.java)
-                        intent.putExtra("title",dataList[position].name)
-                        intent.putExtra("id",dataList[position].id)
+                    if (isShowHistory) {
+                        val intent = Intent(content, CabinetHistoryActivity::class.java)
+                        intent.putExtra("cabinetId", dataList[position].id)
+                        content.startActivity(intent)
+                    } else {
+                        val intent = Intent(content, SwitchBoardActivity::class.java)
+                        intent.putExtra("title", dataList[position].name)
+                        intent.putExtra("id", dataList[position].id)
                         content.startActivity(intent)
                     }
                 }

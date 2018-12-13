@@ -76,7 +76,7 @@
             android:layout_height="match_parent"
             android:background="#55000000"
             android:orientation="horizontal"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <LinearLayout
                 android:id="@+id/searchLayout"

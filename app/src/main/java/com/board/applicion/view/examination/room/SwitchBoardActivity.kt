@@ -221,7 +221,12 @@ class SwitchBoardActivity : BaseActivity() {
         val observable = Observable.create<String> {
             try {
                 val j2c = java2c()
-                it.onNext(j2c.getResult(photoPath))
+                val result = j2c.getResult(photoPath)
+                if (!TextUtils.isEmpty(result)) {
+                    it.onNext(result)
+                } else {
+                    it.onError(Throwable("检查中出现问题!"))
+                }
             } catch (e: Exception) {
                 it.onError(e.fillInStackTrace())
                 it.onComplete()
@@ -232,62 +237,60 @@ class SwitchBoardActivity : BaseActivity() {
         checkDis = observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    if (it.isNotEmpty()) {
-                        Log.d("za","===>$it")
-                        val rowCount = cabinet!!.rowNum.toString().length
-                        val colCount = cabinet!!.colNum.toString().length
-                        val result: String
-                        if (!it.startsWith(cabinet!!.rowNum.toString()+cabinet!!.colNum.toString())){
-                            return@subscribe
-                        }
-                        result = it.substring(rowCount+colCount)
-                        if (result.length != cabinet!!.rowNum*cabinet!!.colNum){
-                            return@subscribe
-                        }
-                        isChecking = false
-                        isCheck = true
-                        var currentPosition = 0
-                        if (cabinet != null) {
-                            sbCheckData.clear()
-                            for (i in 1..cabinet!!.rowNum) {
-                                for (j in 1..cabinet!!.colNum) {
-                                    val sb = getCurrentData(i, j, cabinetTemplateData)
-                                    if (sb != null) {
-                                        sbCheckData.add(SbPosCjRstDetail(0, sb.subId, sb.mcrId, sb.cabinetId
-                                                , sb.id, System.currentTimeMillis(), sb.name, sb.desc, sb.row, sb.col
-                                                , result[currentPosition].toInt(), App.instance.getCurrentUser().name
-                                                , System.currentTimeMillis(), 1))// 读取出数据
+                    val rowCount = cabinet!!.rowNum.toString().length
+                    val colCount = cabinet!!.colNum.toString().length
+                    val result: String
+                    if (it.startsWith(cabinet!!.rowNum.toString() + cabinet!!.colNum.toString())) {
+                        result = it.substring(rowCount + colCount)
+                        if (result.length != cabinet!!.rowNum * cabinet!!.colNum) {
+                            var currentPosition = 0
+                            if (cabinet != null) {
+                                sbCheckData.clear()
+                                for (i in 1..cabinet!!.rowNum) {
+                                    for (j in 1..cabinet!!.colNum) {
+                                        val sb = getCurrentData(i, j, cabinetTemplateData)
+                                        if (sb != null) {
+                                            sbCheckData.add(SbPosCjRstDetail(0, sb.subId, sb.mcrId, sb.cabinetId
+                                                    , sb.id, System.currentTimeMillis(), sb.name, sb.desc, sb.row, sb.col
+                                                    , result[currentPosition].toInt(), App.instance.getCurrentUser().name
+                                                    , System.currentTimeMillis(), 1))// 读取出数据
+                                        }
+                                        currentPosition++
                                     }
-                                    currentPosition++
                                 }
-                            }
-                            cabinetSbPosCkRst = CabinetSbPosCkRst(0, cabinet!!.subId, cabinet!!.mcrId, cabinet!!.id
-                                    , System.currentTimeMillis(), photoPath, "", App.instance.getCurrentUser().name
-                                    , System.currentTimeMillis(), 1)//读取出本次核查记录(临时保存 status 为1 正式保存后为0)
-                            for (sb in sbCheckData) {
-                                sb.cabinetSbPosCkRstToOne.target = cabinetSbPosCkRst
-                            }
-                            cabinetSbPosCkRst!!.substationToOne.target = cabinet!!.substationToOne.target
-                            cabinetSbPosCkRst!!.mainControlRoomToOne.target = cabinet!!.mainControlRoomToOne.target
-                            cabinetSbPosCkRst!!.cabinetToOne.target = cabinet
-                            cabinetSbPosCkRst!!.sbPosCjRstDetailToMany.addAll(sbCheckData)
+                                cabinetSbPosCkRst = CabinetSbPosCkRst(0, cabinet!!.subId, cabinet!!.mcrId, cabinet!!.id
+                                        , System.currentTimeMillis(), photoPath, "", App.instance.getCurrentUser().name
+                                        , System.currentTimeMillis(), 1)//读取出本次核查记录(临时保存 status 为1 正式保存后为0)
+                                for (sb in sbCheckData) {
+                                    sb.cabinetSbPosCkRstToOne.target = cabinetSbPosCkRst
+                                }
+                                cabinetSbPosCkRst!!.substationToOne.target = cabinet!!.substationToOne.target
+                                cabinetSbPosCkRst!!.mainControlRoomToOne.target = cabinet!!.mainControlRoomToOne.target
+                                cabinetSbPosCkRst!!.cabinetToOne.target = cabinet
+                                cabinetSbPosCkRst!!.sbPosCjRstDetailToMany.addAll(sbCheckData)
 
-                            val rstId = cabinetSbPosCkRstStore.getBox().put(cabinetSbPosCkRst!!)
-                            cabinetSbPosCkRst!!.id = rstId
-                            sbPosCjRstDetailStore.getBox().put(sbCheckData)
-                            runOnUiThread {
-                                if (sbCheckData.isNotEmpty()) {
-                                    showPhoto.visibility = View.GONE
-                                    showResultLayout.visibility = View.VISIBLE
-                                    sbRecycleView.adapter?.notifyDataSetChanged()
-                                }
-                                updateState()
+                                val rstId = cabinetSbPosCkRstStore.getBox().put(cabinetSbPosCkRst!!)
+                                cabinetSbPosCkRst!!.id = rstId
+                                sbPosCjRstDetailStore.getBox().put(sbCheckData)
                             }
                         }
+                        if (sbCheckData.isNotEmpty()) {
+                            isChecking = false
+                            isCheck = true
+                            showPhoto.visibility = View.GONE
+                            showResultLayout.visibility = View.VISIBLE
+                            sbRecycleView.adapter?.notifyDataSetChanged()
+                        } else {
+                            isChecking = false
+                            isCheck = true
+                        }
+                        updateState()
                     }
-
                 }, {
-
+                    isChecking = false
+                    isCheck = false
+                    Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
+                    updateState()
                 }, {
 
                 })

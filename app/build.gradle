@@ -128,5 +128,5 @@ dependencies {
     //萤石云开放平台
     implementation 'com.hikvision.ezviz:ezviz-sdk:5.0.0'
     //RFID 扫码
-    implementation files('lib/OLCSDK.jar')
+    implementation files('libs/OLCSDK.jar')
 }

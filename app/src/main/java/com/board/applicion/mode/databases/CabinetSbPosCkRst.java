@@ -1,7 +1,5 @@
 package com.board.applicion.mode.databases;
 
-import android.support.annotation.IntDef;
-
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
 import io.objectbox.relation.ToMany;
