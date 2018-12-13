@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -103,9 +104,8 @@ class SwitchBoardActivity : BaseActivity() {
             }
             if (!TextUtils.isEmpty(photoPath) && isCheck) {
                 //to save
+                var notMatchCount  = 0
                 if (cabinet != null && cabinetSbPosCkRst != null) {
-                    var isPass = true
-
                     cabinetSbPosCkRst!!.status = 0
                     cabinetSbPosCkRst!!.checkTime = System.currentTimeMillis()
                     cabinetSbPosCkRst!!.updateTime = System.currentTimeMillis()
@@ -113,12 +113,13 @@ class SwitchBoardActivity : BaseActivity() {
                         sb.status = 0
                         sb.checkTime = System.currentTimeMillis()
                         sb.updateTime = System.currentTimeMillis()
-                        if (sb.posMatch != 1) {
-                            isPass = false
+                        if (sb.posMatch == 1) {
+                            notMatchCount++
+                            break
                         }
                         sb.cabinetSbPosCkRstToOne.target = cabinetSbPosCkRst
                     }
-                    if (isPass) {
+                    if (notMatchCount == 0) {
                         cabinetSbPosCkRstStore.getBox().put(cabinetSbPosCkRst!!)
                         sbPosCjRstDetailStore.getBox().put(this.sbCheckData)
                         finish()
@@ -127,6 +128,7 @@ class SwitchBoardActivity : BaseActivity() {
                                 .content("当前有异常结果，是否保存?")
                                 .negativeText("否")
                                 .positiveText("是").onPositive { _, _ ->
+                                    cabinetSbPosCkRst!!.checkResult = 1
                                     cabinetSbPosCkRstStore.getBox().put(cabinetSbPosCkRst!!)
                                     sbPosCjRstDetailStore.getBox().put(this.sbCheckData)
                                     finish()
@@ -218,10 +220,20 @@ class SwitchBoardActivity : BaseActivity() {
      * 检查结果
      */
     private fun checkPhoto() {
+        val env = Environment.getExternalStoragePublicDirectory("").absolutePath + File.separator + "model_file" + File.separator
+        if (!File(env, "ClassModel2.yml").exists() || !File(env, "object_detector.svm").exists()) {
+            MaterialDialog.Builder(this)
+                    .content("请确保 在根目录下的model_file 文件夹中，ClassModel2.yml和object_detector.svm 存在!")
+                    .positiveText("确定").onPositive { dialog, _ ->
+                        this.checkPhoto()
+                        dialog.dismiss()
+                    }.negativeText("取消").build().show()
+        }
         val observable = Observable.create<String> {
             try {
-                val j2c = java2c()
-                val result = j2c.getResult(photoPath)
+//                val j2c = java2c()
+//                val result = j2c.getResult(photoPath)
+                val result = "23101101"
                 if (!TextUtils.isEmpty(result)) {
                     it.onNext(result)
                 } else {
@@ -242,7 +254,7 @@ class SwitchBoardActivity : BaseActivity() {
                     val result: String
                     if (it.startsWith(cabinet!!.rowNum.toString() + cabinet!!.colNum.toString())) {
                         result = it.substring(rowCount + colCount)
-                        if (result.length != cabinet!!.rowNum * cabinet!!.colNum) {
+                        if (result.length == cabinet!!.rowNum * cabinet!!.colNum) {
                             var currentPosition = 0
                             if (cabinet != null) {
                                 sbCheckData.clear()
@@ -250,9 +262,18 @@ class SwitchBoardActivity : BaseActivity() {
                                     for (j in 1..cabinet!!.colNum) {
                                         val sb = getCurrentData(i, j, cabinetTemplateData)
                                         if (sb != null) {
+                                            var checkResult = 1
+                                            if (result[currentPosition].toInt() == 48) {
+                                                checkResult = 0
+                                            }
+                                            var isMatch = 0
+                                            if (sb.position != checkResult) {
+                                                isMatch = 1
+                                            }
+                                            sb.position
                                             sbCheckData.add(SbPosCjRstDetail(0, sb.subId, sb.mcrId, sb.cabinetId
                                                     , sb.id, System.currentTimeMillis(), sb.name, sb.desc, sb.row, sb.col
-                                                    , result[currentPosition].toInt(), App.instance.getCurrentUser().name
+                                                    , isMatch, App.instance.getCurrentUser().name
                                                     , System.currentTimeMillis(), 1))// 读取出数据
                                         }
                                         currentPosition++
@@ -282,7 +303,7 @@ class SwitchBoardActivity : BaseActivity() {
                             sbRecycleView.adapter?.notifyDataSetChanged()
                         } else {
                             isChecking = false
-                            isCheck = true
+                            isCheck = false
                         }
                         updateState()
                     }

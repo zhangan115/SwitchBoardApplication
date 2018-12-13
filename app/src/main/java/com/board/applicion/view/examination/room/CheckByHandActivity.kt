@@ -28,29 +28,30 @@ class CheckByHandActivity : BaseActivity() {
 
     override fun initView(savedInstanceState: Bundle?) {
         saveButton.setOnClickListener {
-            var isPass = true
+            var notMatchCount = 0
             cabinetSbPosCkRst!!.status = 0
             cabinetSbPosCkRst!!.checkTime = System.currentTimeMillis()
             cabinetSbPosCkRst!!.updateTime = System.currentTimeMillis()
             for (sb in sbCheckData) {
-                if (sb.posMatch!=0){
-                    isPass = false
+                if (sb.posMatch == 1) {
+                    notMatchCount++
                 }
                 sb.status = 0
                 sb.checkTime = System.currentTimeMillis()
                 sb.updateTime = System.currentTimeMillis()
                 sb.cabinetSbPosCkRstToOne.target = cabinetSbPosCkRst
             }
-            if (isPass){
+            if (notMatchCount == 0) {
                 cabinetSbPosCkRstStore.getBox().put(cabinetSbPosCkRst!!)
                 sbPosCjRstDetailStore.getBox().put(this.sbCheckData)
                 setResult(Activity.RESULT_OK)
                 finish()
-            }else{
+            } else {
                 MaterialDialog.Builder(this)
                         .content("当前有异常结果，是否保存?")
                         .negativeText("否")
                         .positiveText("是").onPositive { _, _ ->
+                            cabinetSbPosCkRst!!.checkResult = 1
                             cabinetSbPosCkRstStore.getBox().put(cabinetSbPosCkRst!!)
                             sbPosCjRstDetailStore.getBox().put(this.sbCheckData)
                             setResult(Activity.RESULT_OK)
@@ -96,41 +97,40 @@ class CheckByHandActivity : BaseActivity() {
         }
     }
 
-private class CheckAdapter(private val dataList: ArrayList<SbPosCjRstDetail>, private val content: Context)
-    : RecyclerView.Adapter<CheckViewHolder>() {
+    private class CheckAdapter(private val dataList: ArrayList<SbPosCjRstDetail>, private val content: Context)
+        : RecyclerView.Adapter<CheckViewHolder>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CheckViewHolder {
-        val view = LayoutInflater.from(content).inflate(R.layout.item_switch_board, parent, false)
-        val icon = view.findViewById<ImageView>(R.id.icon)
-        return CheckViewHolder(view, icon)
-    }
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CheckViewHolder {
+            val view = LayoutInflater.from(content).inflate(R.layout.item_switch_board, parent, false)
+            val icon = view.findViewById<ImageView>(R.id.icon)
+            return CheckViewHolder(view, icon)
+        }
 
-    override fun getItemCount(): Int {
-        return dataList.size
-    }
+        override fun getItemCount(): Int {
+            return dataList.size
+        }
 
-    override fun onBindViewHolder(holder: CheckViewHolder, position: Int) {
-        itemChange(dataList[position].posMatch, holder.imageView)
-        holder.imageView.setOnClickListener {
-            var match = dataList[position].posMatch
-            ++match
-            if (match > 2) {
-                match = 0
+        override fun onBindViewHolder(holder: CheckViewHolder, position: Int) {
+            itemChange(dataList[position].posMatch, holder.imageView)
+            holder.imageView.setOnClickListener {
+                var match = dataList[position].posMatch
+                ++match
+                if (match > 1) {
+                    match = 0
+                }
+                dataList[position].posMatch = match
+                itemChange(match, holder.imageView)
             }
-            dataList[position].posMatch = match
-            itemChange(match, holder.imageView)
+        }
+
+        private fun itemChange(type: Int, imageView: ImageView) {
+            when (type) {
+                0 -> imageView.setImageDrawable(content.resources.getDrawable(R.drawable.press_plate__off_success))
+                else -> imageView.setImageDrawable(content.resources.getDrawable(R.drawable.press_plate__on_fail))
+            }
         }
     }
 
-    private fun itemChange(type: Int, imageView: ImageView) {
-        when (type) {
-            0 -> imageView.setImageDrawable(content.resources.getDrawable(R.drawable.press_plate__off_success))
-            1 -> imageView.setImageDrawable(content.resources.getDrawable(R.drawable.press_plate__on_fail))
-            else -> imageView.setImageDrawable(content.resources.getDrawable(R.drawable.press_plate_b_off))
-        }
-    }
-}
-
-private class CheckViewHolder(itemView: View, val imageView: ImageView)
-    : RecyclerView.ViewHolder(itemView)
+    private class CheckViewHolder(itemView: View, val imageView: ImageView)
+        : RecyclerView.ViewHolder(itemView)
 }

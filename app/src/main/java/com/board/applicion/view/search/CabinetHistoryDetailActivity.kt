@@ -1,5 +1,6 @@
 package com.board.applicion.view.search
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.GridLayoutManager
@@ -19,7 +20,7 @@ import kotlinx.android.synthetic.main.activity_history_detail.*
 
 class CabinetHistoryDetailActivity : BaseActivity() {
 
-    var cabinetCheckId = 0L
+    private var cabinetCheckId = 0L
     private lateinit var store: DatabaseStore<CabinetSbPosCkRst>
     private var data = ArrayList<SbPosCjRstDetail>()
 
@@ -27,6 +28,7 @@ class CabinetHistoryDetailActivity : BaseActivity() {
 
     }
 
+    @SuppressLint("SetTextI18n")
     override fun initData() {
         cabinetCheckId = intent.getLongExtra("id", -1)
         if (cabinetCheckId == -1L) {
@@ -103,9 +105,9 @@ class CabinetHistoryDetailActivity : BaseActivity() {
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             if (dataList[position].posMatch == 0) {
-                holder.imageView.setImageDrawable(content.resources.getDrawable(R.drawable.press_plate_b_on))
+                holder.imageView.setImageDrawable(content.resources.getDrawable(R.drawable.press_plate__off_success))
             } else {
-                holder.imageView.setImageDrawable(content.resources.getDrawable(R.drawable.press_plate_b_off))
+                holder.imageView.setImageDrawable(content.resources.getDrawable(R.drawable.press_plate__on_fail))
             }
         }
     }
