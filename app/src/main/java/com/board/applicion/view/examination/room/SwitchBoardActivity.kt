@@ -231,9 +231,8 @@ class SwitchBoardActivity : BaseActivity() {
         }
         val observable = Observable.create<String> {
             try {
-//                val j2c = java2c()
-//                val result = j2c.getResult(photoPath)
-                val result = "23101101"
+                val j2c = java2c()
+                val result = j2c.getResult(photoPath)
                 if (!TextUtils.isEmpty(result)) {
                     it.onNext(result)
                 } else {
