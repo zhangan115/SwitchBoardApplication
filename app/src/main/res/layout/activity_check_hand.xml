@@ -34,6 +34,7 @@
                 <ImageView
                     android:id="@+id/photoImage"
                     android:layout_width="match_parent"
+                    android:scaleType="centerInside"
                     android:layout_height="153dp" />
 
                 <TextView

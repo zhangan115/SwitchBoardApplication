@@ -104,7 +104,7 @@ class SwitchBoardActivity : BaseActivity() {
             }
             if (!TextUtils.isEmpty(photoPath) && isCheck) {
                 //to save
-                var notMatchCount  = 0
+                var notMatchCount = 0
                 if (cabinet != null && cabinetSbPosCkRst != null) {
                     cabinetSbPosCkRst!!.status = 0
                     cabinetSbPosCkRst!!.checkTime = System.currentTimeMillis()
@@ -140,19 +140,17 @@ class SwitchBoardActivity : BaseActivity() {
             }
         }
         showTempData.setOnClickListener { _ ->
-            if (isCheck) {
-                if (TextUtils.isEmpty(photoPath) || isChecking) {
-                    return@setOnClickListener
-                }
-                //to handle 人工核查
-                if (cabinet == null) return@setOnClickListener
-                val intent = Intent(this, CheckByHandActivity::class.java)
-                intent.putExtra("id", cabinetSbPosCkRst!!.id)
-                startActivityForResult(intent, 203)
-            } else {
-                //show temp 展示模版
-                tempLayout.visibility = View.VISIBLE
+            tempLayout.visibility = View.VISIBLE
+        }
+        checkByHandle.setOnClickListener {
+            if (TextUtils.isEmpty(photoPath) || isChecking) {
+                return@setOnClickListener
             }
+            //to handle 人工核查
+            if (cabinet == null) return@setOnClickListener
+            val intent = Intent(this, CheckByHandActivity::class.java)
+            intent.putExtra("id", cabinetSbPosCkRst!!.id)
+            startActivityForResult(intent, 203)
         }
         closeTempLayout.setOnClickListener {
             tempLayout.visibility = View.GONE
@@ -304,8 +302,11 @@ class SwitchBoardActivity : BaseActivity() {
                             isChecking = false
                             isCheck = false
                         }
-                        updateState()
+                    }else{
+                        isChecking = false
+                        isCheck = false
                     }
+                    updateState()
                 }, {
                     isChecking = false
                     isCheck = false
@@ -334,9 +335,9 @@ class SwitchBoardActivity : BaseActivity() {
             saveUserButton.background = findDrawable(R.drawable.button_disable)
         }
         if (!isCheck) {
-            showTempData.text = "模版"
+            checkByHandle.visibility = View.INVISIBLE
         } else {
-            showTempData.text = "人工核查"
+            checkByHandle.visibility = View.VISIBLE
         }
     }
 

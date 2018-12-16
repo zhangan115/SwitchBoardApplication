@@ -152,17 +152,39 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/showTempData"
-                    android:layout_width="115dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center_vertical"
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginRight="15dp"
-                    android:background="@drawable/button_blue_white"
                     android:gravity="center"
-                    android:text="模版"
-                    android:textColor="@color/colorBlue"
-                    android:textSize="16sp" />
+                    android:orientation="vertical">
+
+                    <Button
+                        android:id="@+id/showTempData"
+                        android:layout_width="115dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center_vertical"
+                        android:background="@drawable/button_blue_white"
+                        android:gravity="center"
+                        android:text="模版"
+                        android:textColor="@color/colorBlue"
+                        android:textSize="16sp" />
+
+                    <Button
+                        android:id="@+id/checkByHandle"
+                        android:layout_width="115dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginTop="20dp"
+                        android:background="@drawable/button_blue_white"
+                        android:gravity="center"
+                        android:text="人工核查"
+                        android:textColor="@color/colorBlue"
+                        android:textSize="16sp"
+                        android:visibility="invisible" />
+                </LinearLayout>
+
+
             </LinearLayout>
 
 
@@ -238,7 +260,7 @@
                     android:id="@+id/showPhoto"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scaleType="center" />
+                    android:scaleType="centerInside" />
 
                 <ImageView
                     android:id="@+id/takePhoto"

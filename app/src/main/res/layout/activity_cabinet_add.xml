@@ -185,8 +185,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 android:background="@color/colorWhite"
                 android:orientation="vertical">
@@ -211,23 +209,33 @@
                         android:textSize="16sp"
                         android:visibility="gone" />
                 </RelativeLayout>
+
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/show"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/colorWhite"
                 android:gravity="center"
-                android:orientation="vertical"
-                android:visibility="gone">
+                android:orientation="horizontal"
+                android:padding="10dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingTop="10dp"
-                    android:text="提示：点击图标改变开启和关闭状态"
-                    android:textColor="@color/colorBlue"
-                    android:textSize="12sp" />
+                    android:drawableLeft="@drawable/blue_circle"
+                    android:drawablePadding="6dp"
+                    android:text="已配置"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:drawableLeft="@drawable/black_circle"
+                    android:drawablePadding="6dp"
+                    android:text="未配置"
+                    android:textSize="14sp" />
             </LinearLayout>
 
         </LinearLayout>
