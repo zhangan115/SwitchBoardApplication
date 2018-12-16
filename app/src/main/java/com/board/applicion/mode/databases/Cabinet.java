@@ -2,6 +2,7 @@ package com.board.applicion.mode.databases;
 
 import io.objectbox.annotation.Entity;
 import io.objectbox.annotation.Id;
+import io.objectbox.relation.ToMany;
 import io.objectbox.relation.ToOne;
 
 /**
@@ -31,6 +32,7 @@ public class Cabinet {
     public int status;
     public ToOne<Substation> substationToOne;
     public ToOne<MainControlRoom> mainControlRoomToOne;
+    public ToMany<CabinetSbPosTemplate> cabinetSbPosTemplateToMany;
 
     public Cabinet(long id, String name, long subId, long mcrId, int rowNum, int colNum, String create, long updateTime, int status) {
         this.id = id;

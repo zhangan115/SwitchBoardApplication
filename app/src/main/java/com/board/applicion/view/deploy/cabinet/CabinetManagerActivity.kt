@@ -49,7 +49,6 @@ class CabinetManagerActivity : BaseEditActivity<Cabinet>() {
         return "屏柜管理"
     }
 
-
     private class Adapter(private val dataList: ArrayList<Cabinet>, val editList: ArrayList<Boolean>, private val content: Context)
         : RecyclerView.Adapter<ViewHolder>() {
 

@@ -183,7 +183,7 @@ class SwitchBoardAddActivity : BaseAddActivity<CabinetSbPosTemplate>() {
             return false
         }
         val des = desEditText.text.toString()
-        if (bean==null){
+        if (bean == null) {
             val queryRowCol = databaseStore.getQueryBuilder()
                     .equal(CabinetSbPosTemplate_.cabinetId, cabinet!!.id)
                     .equal(CabinetSbPosTemplate_.row, currentRowValue.toLong())
@@ -194,15 +194,15 @@ class SwitchBoardAddActivity : BaseAddActivity<CabinetSbPosTemplate>() {
                 Toast.makeText(this, "该位置已经存在", Toast.LENGTH_SHORT).show()
                 return false
             }
-            val query = databaseStore.getQueryBuilder()
-                    .equal(CabinetSbPosTemplate_.name, name)
-                    .equal(CabinetSbPosTemplate_.mcrId, mainControlRoom!!.id)
-                    .build()
-            val list = query.find()
-            if (list.isNotEmpty()) {
-                Toast.makeText(this, "该名称已经使用", Toast.LENGTH_SHORT).show()
-                return false
-            }
+        }
+        val query = databaseStore.getQueryBuilder()
+                .equal(CabinetSbPosTemplate_.name, name)
+                .equal(CabinetSbPosTemplate_.cabinetId, cabinet!!.id)
+                .build()
+        val list = query.find()
+        if (list.isNotEmpty()) {
+            Toast.makeText(this, "该名称已经使用", Toast.LENGTH_SHORT).show()
+            return false
         }
         bean = CabinetSbPosTemplate(beanID, name, des, substation!!.id, mainControlRoom!!.id
                 , cabinet!!.id, currentRowValue, currentColValue, 0, App.instance.getCurrentUser().name

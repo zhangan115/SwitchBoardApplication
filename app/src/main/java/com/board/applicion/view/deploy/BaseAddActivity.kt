@@ -1,5 +1,7 @@
 package com.board.applicion.view.deploy
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import com.board.applicion.base.BaseActivity
@@ -14,10 +16,13 @@ abstract class BaseAddActivity<T> : BaseActivity() {
     open lateinit var databaseStore: DatabaseStore<T>
     //数据库类
     abstract fun getDataClass(): Class<T>
+
     //查询条件
     abstract fun getQueryBuild(): QueryBuilder<T>
+
     //将数据填入到view中
     abstract fun setDataToView()
+
     //获取保存button
     abstract fun getSaveButton(): Button
 
@@ -37,7 +42,12 @@ abstract class BaseAddActivity<T> : BaseActivity() {
             setDataToView()
         }
         getSaveButton().setOnClickListener {
-            if (canSave() && bean != null&&databaseStore.saveData(bean!!)) {
+            if (canSave() && bean != null && databaseStore.saveData(bean!!)) {
+                if (beanID != 0L) {
+                    val intent = Intent()
+                    intent.putExtra("ID", beanID)
+                    setResult(Activity.RESULT_OK, intent)
+                }
                 finish()
             }
         }

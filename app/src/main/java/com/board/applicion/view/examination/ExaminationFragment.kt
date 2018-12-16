@@ -10,6 +10,8 @@ import com.board.applicion.app.App
 import com.board.applicion.base.BaseFragment
 import com.board.applicion.mode.DatabaseStore
 import com.board.applicion.mode.SPConstant
+import com.board.applicion.mode.databases.Cabinet
+import com.board.applicion.mode.databases.CabinetSbPosTemplate
 import com.board.applicion.mode.databases.Substation
 import com.board.applicion.view.examination.room.CabinetListActivity
 import com.board.applicion.view.login.LoginActivity
@@ -66,6 +68,10 @@ class ExaminationFragment : BaseFragment() {
             }
         }
         exitUser.setOnClickListener {
+            val cabinetStore=DatabaseStore(lifecycle,Cabinet::class.java)
+            val sbStore = DatabaseStore(lifecycle,CabinetSbPosTemplate::class.java)
+            cabinetStore.getBox().removeAll()
+            sbStore.getBox().removeAll()
             MaterialDialog.Builder(activity!!)
                     .content("退出登录?")
                     .negativeText("取消")

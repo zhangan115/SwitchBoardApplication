@@ -19,7 +19,7 @@ import io.objectbox.relation.ToOne;
  * COL	        INT	            列号
  * CREATOR	    VARCHAR(64)	    创建人
  * UPDATE_TIME	TIME	        创建/修改时间
- * STATUS	    INT	            状态
+ * STATUS	    INT	            状态 0 已经编辑成功可以保存，其他，没有配置
  */
 @Entity
 public class CabinetSbPosTemplate {
