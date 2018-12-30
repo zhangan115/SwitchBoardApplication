@@ -77,6 +77,7 @@ class SwitchBoardActivity : BaseActivity() {
         sbTemplateStore = DatabaseStore(lifecycle, CabinetSbPosTemplate::class.java)
         cabinetSbPosCkRstStore = DatabaseStore(lifecycle, CabinetSbPosCkRst::class.java)
         sbPosCjRstDetailStore = DatabaseStore(lifecycle, SbPosCjRstDetail::class.java)
+        updateState()
     }
 
 
@@ -301,10 +302,12 @@ class SwitchBoardActivity : BaseActivity() {
                         } else {
                             isChecking = false
                             isCheck = false
+                            checkError()
                         }
                     }else{
                         isChecking = false
                         isCheck = false
+                        checkError()
                     }
                     updateState()
                 }, {
@@ -312,14 +315,24 @@ class SwitchBoardActivity : BaseActivity() {
                     isCheck = false
                     Toast.makeText(this, it.message, Toast.LENGTH_SHORT).show()
                     updateState()
+                    checkError()
                 }, {
 
                 })
     }
 
+    private fun checkError(){
+        MaterialDialog.Builder(this)
+                .content("请检查改屏柜与所拍照片是否匹配！")
+                .positiveText("确定")
+                .onPositive { dialog, _ -> dialog.dismiss() }
+                .build().show()
+    }
+
     private fun updateState() {
         if (photoFile != null && !isCheck && !isChecking) {
             //take photo
+            takePhoto.visibility = View.GONE
             saveUserButton.text = "检查"
             saveUserButton.background = findDrawable(R.drawable.button_check)
         } else if (photoFile != null && !isCheck && isChecking) {
@@ -359,7 +372,7 @@ class SwitchBoardActivity : BaseActivity() {
     }
 
     private fun beginCrop(source: Uri) {
-        val destination = Uri.fromFile(File(this.cacheDir, "${System.currentTimeMillis()}.jpg"))
+        val destination = Uri.fromFile(File(App.instance.getPhotoDir(), "${System.currentTimeMillis()}.jpg"))
         Crop.of(source, destination).start(this)
     }
 
