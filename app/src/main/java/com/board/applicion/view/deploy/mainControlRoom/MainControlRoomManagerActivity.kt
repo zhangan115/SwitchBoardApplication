@@ -38,7 +38,7 @@ class MainControlRoomManagerActivity : BaseEditActivity<MainControlRoom>() {
     }
 
     override fun toSearchIntent(): Intent? {
-        return null
+        return Intent(this,MainControlRoomSearchActivity::class.java)
     }
 
     override fun getAddIntent(): Intent {

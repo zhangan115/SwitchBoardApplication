@@ -10,49 +10,36 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.board.applicion.R
+import com.board.applicion.mode.User
+import com.board.applicion.mode.User_
 import com.board.applicion.mode.databases.Cabinet
 import com.board.applicion.mode.databases.Cabinet_
-import com.board.applicion.view.deploy.BaseEditActivity
-import com.board.applicion.view.deploy.mainControlRoom.MainControlRoomAddActivity
+import com.board.applicion.mode.databases.MainControlRoom
+import com.board.applicion.mode.databases.MainControlRoom_
+import com.board.applicion.view.deploy.BaseSearchActivity
 import io.objectbox.query.QueryBuilder
+import kotlinx.android.synthetic.main.activity_search.*
 
-class CabinetManagerActivity : BaseEditActivity<Cabinet>() {
+class CabinetSearchActivity : BaseSearchActivity<Cabinet>() {
 
-    private lateinit var adapter: Adapter
-
-    override fun setAdapter() {
-        adapter = Adapter(data, editData, this)
-        getRecycleView().adapter = adapter
-    }
-
-    override fun modeChange() {
-        adapter.isEdit = isEditMode
+    override fun setSearchAdapter() {
+        recycleView.adapter = Adapter(this.datas, this)
     }
 
     override fun getDataClass(): Class<Cabinet> {
         return Cabinet::class.java
     }
 
-    override fun toSearchIntent(): Intent? {
-        return Intent(this,CabinetSearchActivity::class.java)
-    }
-
-    override fun getAddIntent(): Intent {
-        return Intent(this, CabinetAddActivity::class.java)
-    }
-
     override fun getQueryBuild(): QueryBuilder<Cabinet> {
-        return databaseStore.getBox().query().equal(Cabinet_.status, 0)
+        return databaseStore.getQueryBuilder().contains(Cabinet_.name, searchContentStr).equal(Cabinet_.status, 0)
     }
 
-    override fun getToolBarTitle(): String? {
-        return "屏柜管理"
+    override fun getHitStr(): String {
+        return "请输入屏柜名称"
     }
 
-    private class Adapter(private val dataList: ArrayList<Cabinet>, val editList: ArrayList<Boolean>, private val content: Context)
+    private class Adapter(private val dataList: ArrayList<Cabinet>, private val content: Context)
         : RecyclerView.Adapter<ViewHolder>() {
-
-        var isEdit: Boolean = false
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val view = LayoutInflater.from(content).inflate(R.layout.item_cabinet_list, parent, false)
@@ -70,34 +57,15 @@ class CabinetManagerActivity : BaseEditActivity<Cabinet>() {
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            if (isEdit) {
-                holder.editLayout.visibility = View.VISIBLE
-            } else {
-                holder.editLayout.visibility = View.GONE
-            }
             holder.text1.text = dataList[position].substationToOne.target.name
             holder.text2.text = dataList[position].mainControlRoomToOne.target.name
             holder.text3.text = dataList[position].name
             holder.text4.text = "${dataList[position].rowNum} X ${dataList[position].colNum} "
-            if (editList[position]) {
-                holder.imageView.setImageDrawable(content.resources.getDrawable(R.drawable.radio_on))
-            } else {
-                holder.imageView.setImageDrawable(content.resources.getDrawable(R.drawable.radio_off))
-            }
             holder.itemView.setOnClickListener {
-                if (isEdit) {
-                    editList[position] = !editList[position]
-                    if (editList[position]) {
-                        holder.imageView.setImageDrawable(content.resources.getDrawable(R.drawable.radio_on))
-                    } else {
-                        holder.imageView.setImageDrawable(content.resources.getDrawable(R.drawable.radio_off))
-                    }
-                } else {
                     val intent = Intent(content, CabinetAddActivity::class.java)
                     intent.putExtra("ID", dataList[position].id)
                     content.startActivity(intent)
                 }
-            }
         }
     }
 
@@ -108,4 +76,5 @@ class CabinetManagerActivity : BaseEditActivity<Cabinet>() {
                              , val text4: TextView
                              , val editLayout: LinearLayout)
         : RecyclerView.ViewHolder(itemView)
+
 }

@@ -3,65 +3,42 @@ package com.board.applicion.view.examination.room
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.board.applicion.R
-import com.board.applicion.base.BaseActivity
-import com.board.applicion.mode.DatabaseStore
 import com.board.applicion.mode.databases.Cabinet
 import com.board.applicion.mode.databases.Cabinet_
+import com.board.applicion.view.deploy.BaseSearchActivity
 import com.board.applicion.view.search.CabinetHistoryActivity
-import kotlinx.android.synthetic.main.activity_cabinet_list.*
+import io.objectbox.query.QueryBuilder
+import kotlinx.android.synthetic.main.activity_search.*
 
-class CabinetListActivity : BaseActivity() {
+class CabinetSearchActivity : BaseSearchActivity<Cabinet>() {
 
-    var dataList = ArrayList<Cabinet>()
     private var isShowHistory = false
-    private var roomId = -1L
 
-    override fun initView(savedInstanceState: Bundle?) {
-        recycleView.layoutManager = LinearLayoutManager(this)
-        val headerView = LayoutInflater.from(this).inflate(R.layout.layout_search_all, null)
-        recycleView.addHeaderView(headerView)
-        headerView.setOnClickListener {
-            //to search
-            val intent = Intent(this,CabinetSearchActivity::class.java)
-            intent.putExtra("showHistory",isShowHistory)
-            intent.putExtra("id",roomId)
-            startActivity(intent)
-        }
+    override fun getDataClass(): Class<Cabinet> {
+        return Cabinet::class.java
+    }
+
+    override fun getQueryBuild(): QueryBuilder<Cabinet> {
+        val subId = intent.getLongExtra("id", -1)
+        return databaseStore.getQueryBuilder().equal(Cabinet_.mcrId, subId)
+                .contains(Cabinet_.name, searchContentStr)
+                .equal(Cabinet_.status, 0)
+    }
+
+    override fun getHitStr(): String {
+        return "请输入屏柜名称"
+    }
+
+    override fun setSearchAdapter() {
         isShowHistory = intent.getBooleanExtra("showHistory", false)
-        recycleView.adapter = Adapter(dataList, isShowHistory, this)
+        recycleView.adapter = Adapter(this.datas, isShowHistory, this)
     }
-
-    override fun initData() {
-        roomId = intent.getLongExtra("id", -1)
-        val cabinetStore = DatabaseStore(lifecycle, Cabinet::class.java)
-        cabinetStore.getQueryData(cabinetStore.getQueryBuilder().equal(Cabinet_.mcrId, roomId).build()) {
-            dataList.clear()
-            dataList.addAll(it)
-            if (dataList.isEmpty()) {
-                noDataTv.visibility = View.VISIBLE
-            } else {
-                noDataTv.visibility = View.GONE
-            }
-            recycleView.adapter?.notifyDataSetChanged()
-        }
-    }
-
-    override fun getContentView(): Int {
-        return R.layout.activity_cabinet_list
-    }
-
-    override fun getToolBarTitle(): String? {
-        return intent.getStringExtra("title")
-    }
-
 
     private class Adapter(private val dataList: ArrayList<Cabinet>, private val isShowHistory: Boolean, private val content: Context)
         : RecyclerView.Adapter<ViewHolder>() {
@@ -97,5 +74,4 @@ class CabinetListActivity : BaseActivity() {
 
     private class ViewHolder(itemView: View, val name: TextView)
         : RecyclerView.ViewHolder(itemView)
-
 }

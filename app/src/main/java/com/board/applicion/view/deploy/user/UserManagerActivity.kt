@@ -35,7 +35,7 @@ class UserManagerActivity : BaseEditActivity<User>() {
     }
 
     override fun toSearchIntent(): Intent? {
-        return null
+        return Intent(this,UserSearchActivity::class.java)
     }
 
     override fun getAddIntent(): Intent {

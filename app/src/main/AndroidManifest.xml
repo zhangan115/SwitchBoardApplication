@@ -272,6 +272,63 @@
             android:name="com.videogo.main.EzvizWebViewActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".view.deploy.user.UserSearchActivity"
+            android:allowTaskReparenting="true"
+            android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:taskAffinity="${TASK_AFFINITY_VALUE}"
+            android:theme="@style/AppTheme.SEARCH"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+
+        <activity
+            android:name=".view.deploy.substation.SubstationSearchActivity"
+            android:allowTaskReparenting="true"
+            android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:taskAffinity="${TASK_AFFINITY_VALUE}"
+            android:theme="@style/AppTheme.SEARCH"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+
+        <activity
+            android:name=".view.deploy.mainControlRoom.MainControlRoomSearchActivity"
+            android:allowTaskReparenting="true"
+            android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:taskAffinity="${TASK_AFFINITY_VALUE}"
+            android:theme="@style/AppTheme.SEARCH"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".view.deploy.cabinet.CabinetSearchActivity"
+            android:allowTaskReparenting="true"
+            android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:taskAffinity="${TASK_AFFINITY_VALUE}"
+            android:theme="@style/AppTheme.SEARCH"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".view.deploy.switchBoard.SwitchBoardSearchActivity"
+            android:allowTaskReparenting="true"
+            android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:taskAffinity="${TASK_AFFINITY_VALUE}"
+            android:theme="@style/AppTheme.SEARCH"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".view.examination.room.CabinetSearchActivity"
+            android:allowTaskReparenting="true"
+            android:configChanges="orientation|keyboardHidden"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:taskAffinity="${TASK_AFFINITY_VALUE}"
+            android:theme="@style/AppTheme.SEARCH"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
     </application>
 
 </manifest>

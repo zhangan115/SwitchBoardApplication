@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <ImageView
                 android:id="@+id/editStateImage"

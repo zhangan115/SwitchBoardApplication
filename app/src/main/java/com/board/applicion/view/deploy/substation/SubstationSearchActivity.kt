@@ -12,49 +12,30 @@ import android.widget.TextView
 import com.board.applicion.R
 import com.board.applicion.mode.databases.Substation
 import com.board.applicion.mode.databases.Substation_
-import com.board.applicion.view.deploy.BaseEditActivity
+import com.board.applicion.view.deploy.BaseSearchActivity
 import io.objectbox.query.QueryBuilder
+import kotlinx.android.synthetic.main.activity_search.*
 
-class SubstationManagerActivity : BaseEditActivity<Substation>() {
+class SubstationSearchActivity : BaseSearchActivity<Substation>() {
 
-    private lateinit var adapter: Adapter
-
-    override fun setAdapter() {
-        adapter = Adapter(data, editData, this)
-        getRecycleView().adapter = adapter
-    }
-
-    override fun modeChange() {
-        adapter.isEdit = isEditMode
+    override fun setSearchAdapter() {
+        recycleView.adapter = Adapter(this.datas, this)
     }
 
     override fun getDataClass(): Class<Substation> {
         return Substation::class.java
     }
 
-    override fun toSearchIntent(): Intent? {
-        return Intent(this,SubstationSearchActivity::class.java)
-    }
-
-    override fun getAddIntent(): Intent {
-        return Intent(this, SubstationAddActivity::class.java)
-    }
-
-    override fun getToolBarTitle(): String? {
-        return "变电站管理"
-    }
-
-    /**
-     * 查询变电站
-     */
     override fun getQueryBuild(): QueryBuilder<Substation> {
-        return databaseStore.getBox().query().equal(Substation_.status, 0)
+        return databaseStore.getQueryBuilder().contains(Substation_.name, searchContentStr).equal(Substation_.status, 0)
     }
 
-    private class Adapter(private val dataList: ArrayList<Substation>, val editList: ArrayList<Boolean>, private val content: Context)
-        : RecyclerView.Adapter<ViewHolder>() {
+    override fun getHitStr(): String {
+        return "请输入变电站名称"
+    }
 
-        var isEdit: Boolean = false
+    private class Adapter(private val dataList: ArrayList<Substation>, private val content: Context)
+        : RecyclerView.Adapter<ViewHolder>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val view = LayoutInflater.from(content).inflate(R.layout.item_substation_list, parent, false)
@@ -71,32 +52,14 @@ class SubstationManagerActivity : BaseEditActivity<Substation>() {
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            if (isEdit) {
-                holder.editLayout.visibility = View.VISIBLE
-            } else {
-                holder.editLayout.visibility = View.GONE
-            }
             holder.substationName.text = dataList[position].name
             holder.substationLevel.text = dataList[position].voltageRank
             holder.substationDes.text = dataList[position].desc
-            if (editList[position]) {
-                holder.imageView.setImageDrawable(content.resources.getDrawable(R.drawable.radio_on))
-            } else {
-                holder.imageView.setImageDrawable(content.resources.getDrawable(R.drawable.radio_off))
-            }
             holder.itemView.setOnClickListener {
-                if (isEdit) {
-                    editList[position] = !editList[position]
-                    if (editList[position]) {
-                        holder.imageView.setImageDrawable(content.resources.getDrawable(R.drawable.radio_on))
-                    } else {
-                        holder.imageView.setImageDrawable(content.resources.getDrawable(R.drawable.radio_off))
-                    }
-                }else{
-                    val intent = Intent(content,SubstationAddActivity::class.java)
-                    intent.putExtra("ID",dataList[position].id)
-                    content.startActivity(intent)
-                }
+
+                val intent = Intent(content, SubstationAddActivity::class.java)
+                intent.putExtra("ID", dataList[position].id)
+                content.startActivity(intent)
             }
         }
     }
@@ -107,3 +70,4 @@ class SubstationManagerActivity : BaseEditActivity<Substation>() {
                              , val substationDes: TextView, val editLayout: LinearLayout)
         : RecyclerView.ViewHolder(itemView)
 }
+
