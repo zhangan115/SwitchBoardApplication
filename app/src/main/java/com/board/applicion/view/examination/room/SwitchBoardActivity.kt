@@ -11,7 +11,6 @@ import android.provider.MediaStore
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.TextUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,8 +22,8 @@ import com.board.applicion.app.App
 import com.board.applicion.base.BaseActivity
 import com.board.applicion.mode.DatabaseStore
 import com.board.applicion.mode.databases.*
+import com.board.applicion.utils.identify.ProcessResult
 import com.bumptech.glide.Glide
-import com.example.xty.ndkdemo.java2c
 import com.soundcloud.android.crop.Crop
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -48,11 +47,14 @@ class SwitchBoardActivity : BaseActivity() {
     private var isChecking = false//正在检查
     private var checkDis: Disposable? = null
 
+    private lateinit var mProcessResult: ProcessResult
+
     private lateinit var cabinetSbPosCkRstStore: DatabaseStore<CabinetSbPosCkRst>//核查记录保存
     private lateinit var sbPosCjRstDetailStore: DatabaseStore<SbPosCjRstDetail>//核查结果保存
 
 
     override fun initData() {
+        mProcessResult = ProcessResult(this.applicationContext)
         val id = intent.getLongExtra("id", -1)
         cabinetStore = DatabaseStore(lifecycle, Cabinet::class.java)
         cabinetStore.getQueryData(cabinetStore.getQueryBuilder().equal(Cabinet_.id, id).build()) {
@@ -230,8 +232,7 @@ class SwitchBoardActivity : BaseActivity() {
         }
         val observable = Observable.create<String> {
             try {
-                val j2c = java2c()
-                val result = j2c.getResult(photoPath)
+                val result = mProcessResult.LoadModel(photoPath)
                 if (!TextUtils.isEmpty(result)) {
                     it.onNext(result)
                 } else {

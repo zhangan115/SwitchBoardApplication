@@ -115,7 +115,7 @@ class SwitchBoardAddActivity : BaseAddActivity<CabinetSbPosTemplate>() {
                 intent.putExtra("subId", mainControlRoom!!.id)
                 startActivityForResult(intent, 202)
             }
-            positionName.setOnClickListener { _ ->
+            positionName.setOnClickListener {
                 if (cabinet == null) return@setOnClickListener
                 val dialogView = LayoutInflater.from(this).inflate(R.layout.pick_number_layout, null)
                 val dialog = MaterialDialog.Builder(this).customView(dialogView, true)

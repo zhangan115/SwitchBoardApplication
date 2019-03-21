@@ -39,6 +39,7 @@ class CabinetAddActivity : BaseAddActivity<Cabinet>() {
     private var rowValue: Int = 0
     private var colValue: Int = 0
     private var canEdit = true
+    
     override fun getDataClass(): Class<Cabinet> {
         return Cabinet::class.java
     }

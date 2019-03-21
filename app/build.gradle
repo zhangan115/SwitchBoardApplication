@@ -129,4 +129,5 @@ dependencies {
     implementation 'com.hikvision.ezviz:ezviz-sdk:5.0.0'
     //RFID 扫码
     implementation files('libs/OLCSDK.jar')
+    implementation files('libs/libandroid_tensorflow_inference_java.jar')
 }
