@@ -230,7 +230,7 @@ class CabinetAddActivity : BaseAddActivity<Cabinet>() {
     }
 
     override fun onBackAction() {
-        if (beanID == 0L && bean != null && bean!!.status == 1) {
+        if (bean != null && bean!!.status == 1) {
             MaterialDialog.Builder(this)
                     .content("确定不再保存该数据?")
                     .positiveText("确定").onPositive { dialog, _ ->
