@@ -221,15 +221,6 @@ class SwitchBoardActivity : BaseActivity() {
      * 检查结果
      */
     private fun checkPhoto() {
-        val env = Environment.getExternalStoragePublicDirectory("").absolutePath + File.separator + "model_file" + File.separator
-        if (!File(env, "ClassModel2.yml").exists() || !File(env, "object_detector.svm").exists()) {
-            MaterialDialog.Builder(this)
-                    .content("请确保 在根目录下的model_file 文件夹中，ClassModel2.yml和object_detector.svm 存在!")
-                    .positiveText("确定").onPositive { dialog, _ ->
-                        this.checkPhoto()
-                        dialog.dismiss()
-                    }.negativeText("取消").build().show()
-        }
         val observable = Observable.create<String> {
             try {
                 val result = mProcessResult.LoadModel(photoPath)
