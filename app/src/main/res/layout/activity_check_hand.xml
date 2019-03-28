@@ -14,19 +14,18 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="260dp"
             android:layout_margin="10dp"
-
             android:background="@color/colorWhite"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginBottom="15dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="5dp"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="vertical">
@@ -34,8 +33,9 @@
                 <ImageView
                     android:id="@+id/photoImage"
                     android:layout_width="match_parent"
+                    android:layout_weight="1"
                     android:scaleType="centerInside"
-                    android:layout_height="153dp" />
+                    android:layout_height="0dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -48,20 +48,19 @@
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginBottom="15dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="5dp"
                 android:layout_weight="1"
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/temp"
-                    android:layout_width="match_parent"
-                    android:layout_height="153dp"
-                    android:src="@drawable/template_1" />
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/tempRecycleView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none" />
 
                 <TextView
                     android:layout_width="wrap_content"

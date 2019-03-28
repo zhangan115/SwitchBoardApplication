@@ -13,9 +13,7 @@ import com.afollestad.materialdialogs.MaterialDialog
 import com.board.applicion.R
 import com.board.applicion.base.BaseActivity
 import com.board.applicion.mode.DatabaseStore
-import com.board.applicion.mode.databases.CabinetSbPosCkRst
-import com.board.applicion.mode.databases.CabinetSbPosCkRst_
-import com.board.applicion.mode.databases.SbPosCjRstDetail
+import com.board.applicion.mode.databases.*
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.activity_check_hand.*
 
@@ -66,12 +64,20 @@ class CheckByHandActivity : BaseActivity() {
         cabinetSbPosCkRstStore = DatabaseStore(lifecycle, CabinetSbPosCkRst::class.java)
         sbPosCjRstDetailStore = DatabaseStore(lifecycle, SbPosCjRstDetail::class.java)
         val id = intent.getLongExtra("id", 0)
+        val cabId = intent.getLongExtra("cabId",0)
         cabinetSbPosCkRst = cabinetSbPosCkRstStore.getQueryBuilder().equal(CabinetSbPosCkRst_.id, id).build().findUnique()
         Glide.with(this).load(cabinetSbPosCkRst!!.posImage).into(photoImage)
         sbRecycleView.layoutManager = GridLayoutManager(this, cabinetSbPosCkRst!!.cabinetToOne.target.colNum)
         sbCheckData.clear()
         sbCheckData.addAll(cabinetSbPosCkRst!!.sbPosCjRstDetailToMany!!)
         sbRecycleView.adapter = CheckAdapter(sbCheckData, this)
+        cabinetStore = DatabaseStore(lifecycle, Cabinet::class.java)
+        cabinetStore.getQueryData(cabinetStore.getQueryBuilder().equal(Cabinet_.id, cabId).build()) {
+            if (it.isNotEmpty() && it.size == 1) {
+                this.cabinet = it[0]
+                showTemp()
+            }
+        }
     }
 
     override fun getContentView(): Int {
@@ -95,6 +101,46 @@ class CheckByHandActivity : BaseActivity() {
         } else {
             super.onBackAction()
         }
+    }
+
+    private lateinit var sbTemplateStore: DatabaseStore<CabinetSbPosTemplate>
+    private val cabinetTemplateData = ArrayList<CabinetSbPosTemplate>()//模板数据
+    private var cabinet: Cabinet? = null//屏柜
+    private lateinit var cabinetStore: DatabaseStore<Cabinet>
+
+    /**
+     * 展示模板
+     */
+    private fun showTemp() {
+        if (cabinet != null) {
+            val adapter = Adapter(cabinetTemplateData, this)
+            tempRecycleView.layoutManager = GridLayoutManager(this, cabinet!!.colNum)
+            tempRecycleView.adapter = adapter
+            val list = cabinet!!.cabinetSbPosTemplateToMany
+            cabinetTemplateData.clear()
+            for (i in 1..cabinet!!.rowNum) {
+                for (j in 1..cabinet!!.colNum) {
+                    val sb = getCurrentData(i, j, list)
+                    if (sb != null)
+                        cabinetTemplateData.add(sb)
+                }
+            }
+            tempRecycleView.adapter?.notifyDataSetChanged()
+        }
+    }
+
+    /**
+     * 获取当前位置的数据
+     */
+    private fun getCurrentData(row: Int, col: Int, list: List<CabinetSbPosTemplate>): CabinetSbPosTemplate? {
+        var cab: CabinetSbPosTemplate? = null
+        for (cab1 in list) {
+            if (cab1.row == row && cab1.col == col) {
+                cab = cab1
+                break
+            }
+        }
+        return cab
     }
 
     private class CheckAdapter(private val dataList: ArrayList<SbPosCjRstDetail>, private val content: Context)
@@ -133,4 +179,30 @@ class CheckByHandActivity : BaseActivity() {
 
     private class CheckViewHolder(itemView: View, val imageView: ImageView)
         : RecyclerView.ViewHolder(itemView)
+
+    private class Adapter(private val dataList: ArrayList<CabinetSbPosTemplate>, private val content: Context)
+        : RecyclerView.Adapter<ViewHolder>() {
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+            val view = LayoutInflater.from(content).inflate(R.layout.item_switch_board_temp, parent, false)
+            val icon = view.findViewById<ImageView>(R.id.icon)
+            return ViewHolder(view, icon)
+        }
+
+        override fun getItemCount(): Int {
+            return dataList.size
+        }
+
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            if (dataList[position].position == 0) {
+                holder.imageView.setImageDrawable(content.resources.getDrawable(R.drawable.press_plate_b_on))
+            } else {
+                holder.imageView.setImageDrawable(content.resources.getDrawable(R.drawable.press_plate_b_off))
+            }
+        }
+    }
+
+    private class ViewHolder(itemView: View, val imageView: ImageView)
+        : RecyclerView.ViewHolder(itemView)
+
 }

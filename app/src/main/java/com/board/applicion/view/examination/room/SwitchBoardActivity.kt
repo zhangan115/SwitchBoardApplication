@@ -153,6 +153,7 @@ class SwitchBoardActivity : BaseActivity() {
             if (cabinet == null) return@setOnClickListener
             val intent = Intent(this, CheckByHandActivity::class.java)
             intent.putExtra("id", cabinetSbPosCkRst!!.id)
+            intent.putExtra("cabId",cabinet!!.id)
             startActivityForResult(intent, 203)
         }
         closeTempLayout.setOnClickListener {
